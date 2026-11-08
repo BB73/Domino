@@ -58,14 +58,16 @@ h2{margin:0 0 6px}
 .nm{display:inline-block;padding:1px 8px;border-radius:9px;background:#0005;margin-bottom:3px}
 .turn .nm{background:var(--brass);color:#2a1d00;font-weight:700}
 .n{left:50%;top:27px;transform:translateX(-50%)}
-.w{left:6px;top:181px;transform:translateY(-50%)}
-.e{right:6px;top:181px;transform:translateY(-50%)}
+.w{left:12px;top:195px;transform:translateY(-50%)}
+.e{right:12px;top:195px;transform:translateY(-50%)}
 .seat .nm{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);margin-bottom:3px;white-space:nowrap}
 .seat .pts{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:4px;white-space:nowrap}
+.n .pts{top:auto;bottom:100%;left:50%;transform:none;margin:0 0 5px 52px}
 .bk{position:relative;display:flex;gap:3px;justify-content:center}
 .w .bk,.e .bk{flex-direction:column;align-items:center}
 .bk i{width:24px;height:42px;border-radius:4px;background:#f7f7f2;box-shadow:0 0 0 1.5px #1d2b23}
 .w .bk i,.e .bk i{width:42px;height:19px}
+.w .bk,.e .bk{min-width:46px}
 .board{left:74px;top:56px;width:696px;height:250px}
 .empty{position:absolute;inset:0;display:grid;place-items:center;margin:0;opacity:.8}
 .hist{left:12px;bottom:8px;width:240px}
@@ -75,20 +77,20 @@ h2{margin:0 0 6px}
 .mv>b.t1,.d.mk.t1::before{background:#ef8d78}
 .hand{left:50%;bottom:8px;transform:translateX(-50%);display:flex;gap:6px}
 .ctl{right:12px;bottom:10px;width:250px;text-align:right}
-.d{position:relative;display:inline-flex;flex:none;background:#fff;border-radius:calc(var(--s)*.2);box-shadow:0 0 0 2px #1d2b23,0 3px 5px #0005;--s:30px}
+.d{position:relative;display:inline-flex;flex:none;background:#fff;border-radius:calc(var(--s)*.2);box-shadow:0 0 0 calc(var(--s)*.053) #1d2b23,0 calc(var(--s)*.08) calc(var(--s)*.13) #0005;--s:30px}
 .d.v{flex-direction:column}
-.d::after{content:"";position:absolute;left:50%;top:10%;bottom:10%;width:2px;transform:translateX(-50%);background:#1d2b23}
-.d.v::after{left:10%;right:10%;top:50%;bottom:auto;width:auto;height:2px;transform:translateY(-50%)}
+.d::after{content:"";position:absolute;left:50%;top:10%;bottom:10%;width:calc(var(--s)*.053);transform:translateX(-50%);background:#1d2b23}
+.d.v::after{left:10%;right:10%;top:50%;bottom:auto;width:auto;height:calc(var(--s)*.053);transform:translateY(-50%)}
 .d::before{display:none}
 .d.m{--s:12px;box-shadow:0 0 0 1px #1d2b23}
-.d.r{--s:32px}
+.d.r{--s:var(--hs,34px)}
 .mv .d{--s:18px}
-.h{width:var(--s);height:var(--s);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:10%}
+.h{width:var(--s);height:var(--s);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:calc(var(--s)*.1)}
 .h b{width:86%;height:86%;margin:auto;border-radius:50%}
 .h b.p{background:#161c18}
-.board .d{position:absolute;--s:32px}
-.hand .d{--s:38px}
-.hand.end .d{--s:32px}
+.board .d{position:absolute;--s:34px}
+.hand .d{--s:var(--hs,34px)}
+.hand.end .d{--s:var(--hs,34px)}
 .d.mk::before{display:block;content:var(--w);position:absolute;z-index:2;left:-6px;top:-9px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;font:700 11px/17px system-ui;text-align:center;color:#2a1d00;background:var(--brass);box-shadow:0 1px 2px #0006}
 .gh{position:absolute;padding:0;border:0;background:none;animation:pulse 1s infinite}
 .gh .d{left:0;top:0;opacity:.85;outline:2px dashed var(--brass);outline-offset:3px}
@@ -99,7 +101,7 @@ h2{margin:0 0 6px}
 .st{padding:0;border:0;background:none;border-radius:8px;transition:transform .12s}
 .st:disabled{cursor:default}
 .st.ok{transform:translateY(-8px)}
-.st.ok .d{box-shadow:0 0 0 3px var(--brass),0 3px 6px #0004}
+.st.ok .d{box-shadow:0 0 0 calc(var(--s)*.08) var(--brass),0 calc(var(--s)*.08) calc(var(--s)*.16) #0004}
 .st.sel{transform:translateY(-14px)}
 .st.no{opacity:.45}
 .tik{margin-top:6px;padding:9px 16px;border-radius:10px;border:2px solid #fff8;background:transparent;color:#fff}
@@ -110,7 +112,7 @@ h2{margin:0 0 6px}
 .pl.t1{background:#ef8d78}
 .pl.rc{outline:2px solid #fff}
 .pts{display:block;font-size:11px;opacity:.9}
-.mine{left:50%;bottom:76px;transform:translateX(-50%);text-align:center}
+.mine{left:196px;bottom:12px;width:84px;text-align:center}
 .fx{inset:0;pointer-events:none;z-index:7;overflow:hidden}
 .rib{left:50%;top:44%;padding:8px 34px 10px;border-radius:14px;font-size:38px;font-weight:800;line-height:1.1;text-align:center;white-space:nowrap;color:#2a1d00;background:var(--brass);box-shadow:0 8px 0 #0004;animation:pop 2.8s both}
 .rib.l{background:#ef8d78}
@@ -133,9 +135,10 @@ h2{margin:0 0 6px}
 const SHORT=['Jij','West','Noord','Oost'],NM=['Zuid','West','Noord','Oost'],INI=['Z','W','N','O'];
 const PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8],[0,2,3,4,5,6,8]];
 const $=id=>document.getElementById(id);
-const half=n=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${PIPS[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
-const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a)}${half(b)}</span>`;
-const SS=32,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
+const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
+const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
+const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
+const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
 let S={bestOf:5,ccw:true,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,tm=0,info=false,rules=false;
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
@@ -249,7 +252,7 @@ function arm(list,isR,x,out,cols){
   for(const s of list){
     const w=s.a===s.b?1:2;
     if(cx!==null){x=dir>0?(w===2?cx:cx+1):(w===2?cx+1:cx);cx=null}
-    if(dir>0?x+w>cols-1:x-w<1){const st=pd!==null,c=st?pd:dir>0?x:x-1;out.push({s,x:c,y:yl,w:1,v:true,k:(st?2:1)*(isR?1:-1),f:false});cx=c;pd=null;yl+=(st?PD:P)*(isR?1:-1);dir=-dir;continue}
+    if(dir>0?x+w>cols-1||(w===1&&x>cols-4):x-w<1||(w===1&&x<4)){const st=false,c=dir>0?x:x-1;out.push({s,x:c,y:yl,w:1,v:true,k:(st?2:1)*(isR?1:-1),f:false});cx=c;pd=null;yl+=(st?PD:P)*(isR?1:-1);dir=-dir;continue}
     out.push({s,x:dir>0?x:x-w,y:yl,w,v:w===1,k:0,f:(dir>0)!==isR});
     pd=w===1?(dir>0?x:x-1):null;
     x+=dir*w;
@@ -260,6 +263,13 @@ function layout(ch,anc,cols){
   arm(ch.slice(k+1),true,x0+wa,out,cols);
   arm(ch.slice(0,k).reverse(),false,x0,out,cols);
   return out;
+}
+let TF='';
+function smooth(ty,bf,n){
+  const b=document.querySelector&&document.querySelector('.board');if(!b)return;
+  const cur=`translateY(${ty}px) scale(${bf})`;
+  if(n&&TF&&TF!==cur){b.style.transform=TF;void b.offsetWidth;b.style.transition='transform .45s ease';b.style.transform=cur}
+  TF=n?cur:'';
 }
 function toggleInfo(){info=!info;G?step():render()}
 function toggleRules(){rules=!rules;render()}
@@ -311,14 +321,19 @@ function render(){
   const sel=G.sel!==null?mv.filter(m=>m.i===G.sel).map(m=>m.side):[];
   const ghost=side=>({...orient(G.hands[0][G.sel],side),g:side});
   const ch=c.length?[...(sel.includes('L')?[ghost('L')]:[]),...c,...(sel.includes('R')?[ghost('R')]:[])]:[];
-  const cols=G.anchor&&G.anchor.a===G.anchor.b?19:20,ox=(696-cols*U)/2;
+  const cols=G.anchor&&G.anchor.a===G.anchor.b?17:18,ox=(696-cols*U)/2;
   const its=ch.length?layout(ch,G.anchor,cols):[];
   // Zeer lange kettingen: het bord schaalt mee rond de beginsteen, zodat niets over de rest heen valt
-  const bf=Math.max(.55,Math.min(1,...its.map(i=>{const h=i.v?2*SS:SS,t=125+i.y+(i.k===1?-SS/2:i.k===-1?-1.5*SS:i.k===2?SS+GG:i.k===-2?-(3*SS+GG):-h/2);return Math.min(125/Math.max(125-t,1),125/Math.max(t+h-125,1))})));
+  const ext=its.map(i=>{const h=i.v?2*SS:SS,t=AY+i.y+(i.k===1?-SS/2:i.k===-1?-1.5*SS:i.k===2?SS+GG:i.k===-2?-(3*SS+GG):-h/2);return[t,t+h]});
+  // Het bord past zich aan de slang aan: eerst schuiven (alleen als het moet), pas daarna krimpen
+  const etop=Math.min(...ext.map(e=>e[0])),ebot=Math.max(...ext.map(e=>e[1]));
+  const bf=its.length?Math.max(.55,Math.min(1,248/(ebot-etop))):1;
+  const sT=AY+(etop-AY)*bf,sB=AY+(ebot-AY)*bf,ty=its.length?(sT<10?10-sT:sB>258?258-sB:0):0;
   const who=new Map(G.hist.slice(-3).filter(h=>h.o).map(h=>[h.o,h.seat]));
+  a.style.setProperty('--hs',SS*bf+'px');
   const stones=its.map(i=>{
     const o=i.s,[p,q]=i.f?[o.b,o.a]:[o.a,o.b],dw=i.v?SS:2*SS,dh=i.v?2*SS:SS;
-    const px=ox+i.x*U+(i.w*U-dw)/2,py=125+i.y+(i.k===1?-SS/2:i.k===-1?-1.5*SS:i.k===2?SS+GG:i.k===-2?-(3*SS+GG):-dh/2),pos=`left:${px}px;top:${py}px`;
+    const px=ox+i.x*U+(i.w*U-dw)/2,py=AY+i.y+(i.k===1?-SS/2:i.k===-1?-1.5*SS:i.k===2?SS+GG:i.k===-2?-(3*SS+GG):-dh/2),pos=`left:${px}px;top:${py}px`;
     if(o.g)return`<button class="gh" style="${pos};width:${dw}px;height:${dh}px" onclick="put('${o.g}')" aria-label="Hier aanleggen">${dom(p,q,i.v,'g')}</button>`;
     const nw=last&&last.o===o,fv=nw?`--fx:${FX[last.seat]}px;--fy:${FY[last.seat]}px;`:'',own=o.by,side=i.k===2||i.k===-2;
     const bx=side?(i.k>0?px-17:px+dw+2):px+dw/2-8,by=side?py+dh/2-8:i.k===1?py-17:py+dh+2;
@@ -331,7 +346,7 @@ function render(){
   const t=G.over&&G.over.team;
   const sv=G.over?G.over.seat:null,tot=s=>G.hands[s].reduce((n,x)=>n+x.a+x.b,0),wt=tot(0)+tot(2),zt=tot(1)+tot(3);
   const head=!G.over?'':done?(t===0?'Wedstrijd gewonnen!':'Wedstrijd verloren'):G.over.dos?'Dos cabes!':sv===null?'Dicht!':sv===0?'Jij bent uit!':`${SHORT[sv]} is uit!`;
-  const sub=!G.over?'':done?`Stand: wij ${wins[0]} – ${wins[1]} zij${G.over.dos?' · dos cabes!':''}`:t===null?'Gelijk: niemand krijgt een punt':sv===null?`Wij ${wt} – ${zt} zij: het laagste telt`:G.over.dos?`Aan beide kanten aanleggen: dubbele punten voor ${t===0?'ons':'hen'}`:t===0?'Ronde voor ons':'Ronde voor hen';
+  const sub=!G.over?'':done?`Stand: wij ${wins[0]} – ${wins[1]} zij${G.over.dos?' · dos cabes!':''}`:t===null?'Gelijk: niemand krijgt een punt':sv===null?`Wij ${wt} – ${zt} zij: het laagste telt`:G.over.dos?`Dubbele punten voor ${t===0?'ons':'hen'}`:t===0?'Ronde voor ons':'Ronde voor hen';
   const dots=k=>`<div class="dots"><span>${k?'Zij':'Wij'}</span>${Array.from({length:need},(_,i)=>`<i class="${i<wins[k]?'on t'+k:''}"></i>`).join('')}</div>`;
   const showFx=G.over&&!G.fx;if(G.over)G.fx=true;
   const nc=showFx&&t===0?(done?90:G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
@@ -341,10 +356,11 @@ function render(){
 <button class="abs quit" onclick="reset()" aria-label="Stoppen">✕</button>
 <button class="abs quit info" onclick="toggleInfo()" aria-label="Uitleg">i</button>
 ${seat(1)}${seat(2)}${seat(3)}
-<div class="abs board" style="transform:scale(${bf});transform-origin:348px 125px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
+<div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
 <div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
 ${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${infoHTML()}`;
+  smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
 </script>
