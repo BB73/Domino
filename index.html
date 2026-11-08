@@ -64,8 +64,8 @@ h2{margin:0 0 6px}
 .seat .pts{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:4px;white-space:nowrap}
 .bk{position:relative;display:flex;gap:3px;justify-content:center}
 .w .bk,.e .bk{flex-direction:column;align-items:center}
-.bk i{width:20px;height:36px;border-radius:4px;background:#f7f7f2;box-shadow:0 0 0 1.5px #1d2b23}
-.w .bk i,.e .bk i{width:38px;height:16px}
+.bk i{width:24px;height:42px;border-radius:4px;background:#f7f7f2;box-shadow:0 0 0 1.5px #1d2b23}
+.w .bk i,.e .bk i{width:42px;height:19px}
 .board{left:74px;top:56px;width:696px;height:250px}
 .empty{position:absolute;inset:0;display:grid;place-items:center;margin:0;opacity:.8}
 .hist{left:12px;bottom:8px;width:240px}
@@ -81,14 +81,14 @@ h2{margin:0 0 6px}
 .d.v::after{left:10%;right:10%;top:50%;bottom:auto;width:auto;height:2px;transform:translateY(-50%)}
 .d::before{display:none}
 .d.m{--s:12px;box-shadow:0 0 0 1px #1d2b23}
-.d.r{--s:26px}
+.d.r{--s:32px}
 .mv .d{--s:18px}
 .h{width:var(--s);height:var(--s);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:10%}
 .h b{width:86%;height:86%;margin:auto;border-radius:50%}
 .h b.p{background:#161c18}
-.board .d{position:absolute;--s:26px}
-.hand .d{--s:31px}
-.hand.end .d{--s:26px}
+.board .d{position:absolute;--s:32px}
+.hand .d{--s:38px}
+.hand.end .d{--s:32px}
 .d.mk::before{display:block;content:var(--w);position:absolute;z-index:2;left:-6px;top:-9px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;font:700 11px/17px system-ui;text-align:center;color:#2a1d00;background:var(--brass);box-shadow:0 1px 2px #0006}
 .gh{position:absolute;padding:0;border:0;background:none;animation:pulse 1s infinite}
 .gh .d{left:0;top:0;opacity:.85;outline:2px dashed var(--brass);outline-offset:3px}
@@ -110,7 +110,7 @@ h2{margin:0 0 6px}
 .pl.t1{background:#ef8d78}
 .pl.rc{outline:2px solid #fff}
 .pts{display:block;font-size:11px;opacity:.9}
-.mine{left:50%;bottom:62px;transform:translateX(-50%);text-align:center}
+.mine{left:50%;bottom:76px;transform:translateX(-50%);text-align:center}
 .fx{inset:0;pointer-events:none;z-index:7;overflow:hidden}
 .rib{left:50%;top:44%;padding:8px 34px 10px;border-radius:14px;font-size:38px;font-weight:800;line-height:1.1;text-align:center;white-space:nowrap;color:#2a1d00;background:var(--brass);box-shadow:0 8px 0 #0004;animation:pop 2.8s both}
 .rib.l{background:#ef8d78}
@@ -135,7 +135,7 @@ const PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8],[0,2,3,4,5,
 const $=id=>document.getElementById(id);
 const half=n=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${PIPS[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a)}${half(b)}</span>`;
-const SS=26,GG=6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
+const SS=32,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
 let S={bestOf:5,ccw:true,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,tm=0,info=false,rules=false;
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
@@ -311,7 +311,7 @@ function render(){
   const sel=G.sel!==null?mv.filter(m=>m.i===G.sel).map(m=>m.side):[];
   const ghost=side=>({...orient(G.hands[0][G.sel],side),g:side});
   const ch=c.length?[...(sel.includes('L')?[ghost('L')]:[]),...c,...(sel.includes('R')?[ghost('R')]:[])]:[];
-  const cols=G.anchor&&G.anchor.a===G.anchor.b?23:24,ox=(696-cols*U)/2;
+  const cols=G.anchor&&G.anchor.a===G.anchor.b?19:20,ox=(696-cols*U)/2;
   const its=ch.length?layout(ch,G.anchor,cols):[];
   // Zeer lange kettingen: het bord schaalt mee rond de beginsteen, zodat niets over de rest heen valt
   const bf=Math.max(.55,Math.min(1,...its.map(i=>{const h=i.v?2*SS:SS,t=125+i.y+(i.k===1?-SS/2:i.k===-1?-1.5*SS:i.k===2?SS+GG:i.k===-2?-(3*SS+GG):-h/2);return Math.min(125/Math.max(125-t,1),125/Math.max(t+h-125,1))})));
