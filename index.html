@@ -42,22 +42,28 @@ h2{margin:0 0 6px}
 .lvbox .lvb{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:800;background:var(--brass);color:#2a1d00}
 .lvbox .lvb.gold{background:linear-gradient(135deg,#ffe9a6,#e0b04a);font-size:28px}
 .lvbox p{margin:0;font-size:12.5px;min-height:0}
-.lvbox .note,.lvbox .naam,.lvbox .stat{grid-column:1/-1}
+
 .note{font-size:12.5px}
+.rcol{display:flex;flex-direction:column;gap:6px}
+.rcol .note{margin-bottom:2px}
 .note .lnk{display:inline;padding:0 4px;font-size:12.5px}
 .naam{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
 .stat{font-size:12.5px;opacity:.85}
 .ovl{inset:0;background:#000b;z-index:8;display:grid;place-items:center;overflow:hidden}
 .ovl .card{position:relative;z-index:1}
-.lvcard{width:430px;text-align:center}
-.lvbadge{width:86px;height:86px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:46px;font-weight:800;color:#2a1d00;background:radial-gradient(circle at 35% 30%,#ffe9a6,var(--brass));box-shadow:0 0 0 5px #fff8,0 8px 18px #0006}
+.lvcard{width:540px;text-align:center}
+.lvcard p{margin:3px 0}
+.lvcard .conv{font-size:14px}
+.lvcard .sm{font-size:12px;opacity:.85}
+.lvcard .go{margin-top:8px}
+.lvbadge{width:74px;height:74px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-size:40px;font-weight:800;color:#2a1d00;background:radial-gradient(circle at 35% 30%,#ffe9a6,var(--brass));box-shadow:0 0 0 5px #fff8,0 8px 18px #0006}
 .up .lvbadge{animation:lvup 1s cubic-bezier(.2,.9,.3,1.3) both}
 .down .lvbadge{background:radial-gradient(circle at 35% 30%,#ffd1c7,#ef8d78);animation:lvdown .9s ease-out both}
 .stay .lvbadge{background:radial-gradient(circle at 35% 30%,#d9e6dd,#9db8a8)}
 @keyframes lvup{from{transform:translateY(130px) scale(.3);opacity:0}to{transform:none;opacity:1}}
 @keyframes lvdown{0%{transform:translateY(-130px) scale(1.2);opacity:0}60%{transform:translateY(8px) rotate(-6deg);opacity:1}80%{transform:translateY(-3px) rotate(4deg)}100%{transform:none}}
-.lvcard h2{font-size:28px;margin:4px 0}
-.lvcard .big{font-size:17px;font-weight:700}
+.lvcard h2{font-size:26px;margin:2px 0}
+.lvcard .big{font-size:16px;font-weight:700;margin-top:6px}
 .sp{font-size:24px;letter-spacing:6px;margin:4px 0}
 .cert{width:770px;max-height:366px;overflow:auto;text-align:center;border:6px double #b8923c;background:linear-gradient(#fffdf4,#f6edd2);color:#3b2d12;font-family:Georgia,"Times New Roman",serif;padding:12px 22px}
 .cert h2{font-size:34px;margin:0;color:#9a6f10}
@@ -431,15 +437,15 @@ function seg(k,opts){
   return`<div class="seg">${opts.map(([v,l])=>`<button class="${S[k]===v?'on':''}" onclick="S.${k}=${v};render()">${l}</button>`).join('')}</div>`;
 }
 function setup(){
-  const lv=lvl(),L=LV[lv-1],M=C.master;
-  const note=M?'Masterspel: je kunt niets meer winnen of verliezen.':lv===1?'Win je een wedstrijd, dan ga je naar niveau 2. Verlies je, dan blijf je hier.':lv<LV.length?`Win je, dan ga je naar niveau ${lv+1}. Verlies je, dan terug naar niveau ${lv-1}.`:'Win je, dan krijg je het Master-certificaat. Verlies je, dan terug naar niveau '+(lv-1)+'.';
+  const lv=lvl(),L=LV[lv-1],M=C.master,showLv=M||lv>1;
+  const note=M?'Masterspel: je kunt niets meer winnen of verliezen.':lv<LV.length?`Win je, dan ga je naar niveau ${lv+1}. Verlies je, dan terug naar niveau ${lv-1}.`:'Win je, dan krijg je het Master-certificaat. Verlies je, dan terug naar niveau '+(lv-1)+'.';
+  const lvBox=showLv?`<div class="lvbox"><div class="lvb${M?' gold':''}">${M?'🏆':lv}</div><div><b>${M?'Master in Domino':'Niveau '+lv+' van '+LV.length}</b><button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button><p>${L[0]}: ${L[1]}</p></div></div>
+<div class="note">${note}${M?' <button class="lnk" onclick="restart()">Nieuw traject</button>':''}</div>`:'';
   return`<div class="abs card setup"><h1>Domino</h1><p>Jij en Noord tegen West en Oost</p>
 <div class="cols"><div><b>Aantal spellen</b>${seg('bestOf',[[5,'Best of 5'],[9,'Best of 9'],[19,'Best of 19']])}
 <b>Speelrichting</b>${seg('ccw',[[false,'Met de klok mee'],[true,'Tegen de klok in']])}</div>
-<div class="lvbox"><div class="lvb${M?' gold':''}">${M?'🏆':lv}</div><div><b>${M?'Master in Domino':'Niveau '+lv+' van '+LV.length}</b><button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button><p>${L[0]}: ${L[1]}</p></div>
-<div class="note">${note}${M?' <button class="lnk" onclick="restart()">Nieuw traject</button>':''}</div>
-<input class="naam" type="text" maxlength="24" placeholder="Jouw naam (voor het certificaat)" value="${esc(C.naam)}" oninput="C.naam=this.value;save()" aria-label="Jouw naam">
-<div class="stat">Potjes: ${C.pw} gewonnen · ${C.pl} verloren</div></div></div>
+<div class="rcol">${lvBox}<b>Jouw naam</b><input class="naam" type="text" maxlength="24" placeholder="Voor het certificaat" value="${esc(C.naam)}" oninput="C.naam=this.value;save()" aria-label="Jouw naam">
+${C.pw+C.pl>0?`<div class="stat">Potjes: ${C.pw} gewonnen · ${C.pl} verloren</div>`:''}</div></div>
 <div class="row"><label class="chk"><input type="checkbox" ${S.dos?'checked':''} onchange="S.dos=this.checked"> Met dos cabes (dubbele punten)</label>
 <span>${C.cert?'<button class="lnk" onclick="showCert()">🏆 Certificaat</button> ':''}<button class="lnk" onclick="toggleRules()">Spelregels</button></span></div>
 <button class="go" onclick="start()">Start</button></div><button class="abs quit" onclick="toggleInfo()" aria-label="Uitleg">i</button>${infoHTML()}${rulesHTML()}${lvInfoHTML()}${ovlHTML()}`;
@@ -447,7 +453,7 @@ function setup(){
 // Promotie, degradatie en certificaat
 function showCareer(){const r=G.over.career;ovl=r.kind==='master'?'cert':'career';render()}
 function showCert(){ovl='cert';render()}
-function closeOvl(){ovl=null;G?reset():render()}
+function closeOvl(){ovl=null;G?start():render()}
 const confetti=n=>Array.from({length:n},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'][i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('');
 function ovlHTML(){
   if(!ovl)return'';
@@ -459,15 +465,16 @@ function ovlHTML(){
 <p>voor het verslaan van de computer op het hoogste niveau.</p>
 <div class="cap">Je route: elk rondje is een wedstrijd, het cijfer is het niveau (groen gewonnen, rood verloren)</div><div class="route">${c.hist.map(h=>`<span class="rc ${h.w?'rcw':'rcl'}">${h.van}</span>`).join('')}<span class="seal">🏆</span></div>
 <p><b>${c.hist.length}</b> wedstrijden: <b>${c.mw}</b> gewonnen, <b>${c.ml}</b> verloren · potjes: <b>${c.pw}</b> gewonnen, <b>${c.pl}</b> verloren · <b>${c.ups}</b> promoties, <b>${c.downs}</b> degradaties</p>
-<p class="dt">${d}</p><button class="go" onclick="closeOvl()">Doorgaan</button></div></div>`;
+<p class="dt">${d}</p><button class="go" onclick="closeOvl()">${G?'Volgende wedstrijd':'Sluiten'}</button></div></div>`;
   }
   const r=G&&G.over&&G.over.career;if(!r)return'';
-  const up=r.kind==='up',down=r.kind==='down',N=LV[r.to-1];
-  const head=up?'Promotie!':down?'Een stapje terug':'Nog niet gelukt';
-  const txt=up?`Van niveau ${r.from} naar niveau ${r.to}. Nieuw bij de computer: ${N[0].toLowerCase()}.`:down?`Terug naar niveau ${r.to}. Oefening baart kunst!`:'Je blijft op niveau 1. Win een wedstrijd om door te gaan.';
-  return`<div class="abs ovl">${up?confetti(50):''}<div class="card lvcard ${up?'up':down?'down':'stay'}"><div class="lvbadge">${r.to}</div>
-<h2>${head}</h2><p class="big">${up||down?'Niveau '+r.to+': '+N[0]:'Niveau 1: '+LV[0][0]}</p><p>${txt}</p><div class="sp">${up?'✨ ⭐ ✨':down?'😅':'💪'}</div>
-<button class="go" onclick="closeOvl()">Doorgaan</button></div></div>`;
+  const up=r.kind==='up',N=LV[r.to-1],low=t=>t[0].toLowerCase()+t.slice(1);
+  const head=up?'✨ Promotie! ✨':'Een stapje terug';
+  const txt=up?`Van niveau ${r.from} naar niveau ${r.to}.`:`Terug naar niveau ${r.to}. Oefening baart kunst!`;
+  const look=r.to>1?`<p class="sm">Hij let op: ${low(INFO[r.to-1][0].split('. ')[0].replace(/\.?$/,'.'))}</p>`:'';
+  return`<div class="abs ovl">${up?confetti(50):''}<div class="card lvcard ${up?'up':'down'}"><div class="lvbadge">${r.to}</div>
+<h2>${head}</h2><p>${txt}</p><p class="big">Niveau ${r.to}: ${N[0]}</p><p class="conv">Zo speelt de computer nu: ${low(N[1])}</p>${look}
+<button class="go" onclick="closeOvl()">Volgende wedstrijd</button></div></div>`;
 }
 function render(){
   const a=$('app');
@@ -509,8 +516,8 @@ function render(){
   const showFx=G.over&&!G.fx;if(G.over)G.fx=true;
   const nc=showFx&&t===0?(done?90:G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
   const fx=showFx?`<div class="abs fx"><div class="abs rib ${t===0?'':t===null?'g':'l'}">${head}<small>${sub}</small></div>${Array.from({length:nc},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${CC[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('')}</div>`:'';
-  const cr=G.over&&G.over.career&&G.over.career.kind!=='meester';
-  const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl"><h3>${head}</h3><div>${sub}</div><button class="go" onclick="${done?(cr?'showCareer()':'reset()'):'deal()'}">${done?(cr?'Verder':'Nieuwe wedstrijd'):'Volgende ronde'}</button></div>`:'';
+  const cr=G.over&&G.over.career&&['up','down','master'].includes(G.over.career.kind);
+  const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl"><h3>${head}</h3><div>${sub}</div><button class="go" onclick="${done?(cr?'showCareer()':'start()'):'deal()'}">${done?(cr?'Verder':'Volgende wedstrijd'):'Volgende ronde'}</button></div>`:'';
   a.innerHTML=`<div class="abs score">${dots(0)}${dots(1)}Best of ${S.bestOf} · ronde ${round} · niveau ${lvl()} <button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button> · ${S.ccw?'↺':'↻'}</div>
 <button class="abs quit" onclick="reset()" aria-label="Stoppen">✕</button>
 <button class="abs quit info" onclick="toggleInfo()" aria-label="Uitleg">i</button>
