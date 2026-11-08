@@ -32,7 +32,46 @@ p{margin:4px 0}
 h1{margin:0;font-size:30px}
 h2{margin:0 0 6px}
 .card{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
-.setup{left:50%;top:50%;transform:translate(-50%,-50%);width:540px}
+.setup{left:50%;top:50%;transform:translate(-50%,-50%);width:660px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left;margin:10px 0 4px}
+.cols p{margin:2px 0 0;font-size:13px;min-height:2.7em}
+.rng{width:100%;margin:10px 0 4px;accent-color:#2c7a4f}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 12px}
+.row .chk,.row .lnk{margin:0}
+.lvbox{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:center}
+.lvbox .lvb{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:800;background:var(--brass);color:#2a1d00}
+.lvbox .lvb.gold{background:linear-gradient(135deg,#ffe9a6,#e0b04a);font-size:28px}
+.lvbox p{margin:0;font-size:12.5px;min-height:0}
+.lvbox .note,.lvbox .naam,.lvbox .stat{grid-column:1/-1}
+.note{font-size:12.5px}
+.note .lnk{display:inline;padding:0 4px;font-size:12.5px}
+.naam{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
+.stat{font-size:12.5px;opacity:.85}
+.ovl{inset:0;background:#000b;z-index:8;display:grid;place-items:center;overflow:hidden}
+.ovl .card{position:relative;z-index:1}
+.lvcard{width:430px;text-align:center}
+.lvbadge{width:86px;height:86px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:46px;font-weight:800;color:#2a1d00;background:radial-gradient(circle at 35% 30%,#ffe9a6,var(--brass));box-shadow:0 0 0 5px #fff8,0 8px 18px #0006}
+.up .lvbadge{animation:lvup 1s cubic-bezier(.2,.9,.3,1.3) both}
+.down .lvbadge{background:radial-gradient(circle at 35% 30%,#ffd1c7,#ef8d78);animation:lvdown .9s ease-out both}
+.stay .lvbadge{background:radial-gradient(circle at 35% 30%,#d9e6dd,#9db8a8)}
+@keyframes lvup{from{transform:translateY(130px) scale(.3);opacity:0}to{transform:none;opacity:1}}
+@keyframes lvdown{0%{transform:translateY(-130px) scale(1.2);opacity:0}60%{transform:translateY(8px) rotate(-6deg);opacity:1}80%{transform:translateY(-3px) rotate(4deg)}100%{transform:none}}
+.lvcard h2{font-size:28px;margin:4px 0}
+.lvcard .big{font-size:17px;font-weight:700}
+.sp{font-size:24px;letter-spacing:6px;margin:4px 0}
+.cert{width:770px;max-height:366px;overflow:auto;text-align:center;border:6px double #b8923c;background:linear-gradient(#fffdf4,#f6edd2);color:#3b2d12;font-family:Georgia,"Times New Roman",serif;padding:12px 22px}
+.cert h2{font-size:34px;margin:0;color:#9a6f10}
+.csub{font-size:13px;letter-spacing:.16em;color:#8a6d1f}
+.cert p{margin:3px 0;font-size:13px}
+.cert .who{font-size:28px;font-style:italic;margin:0 0 2px}
+.cert .dt{font-size:12px;opacity:.8}
+.cert .cap{font-size:11px;opacity:.75;margin-top:4px}
+.cert .go{width:auto;padding:8px 26px;font-family:system-ui,sans-serif;font-size:15px;margin-top:4px}
+.route{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;margin:6px 0}
+.rc{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px system-ui,sans-serif;color:#fff}
+.rc.rcw{background:#2c7a4f}
+.rc.rcl{background:#c8553f}
+.seal{font-size:30px;margin-left:6px}
 .seg{display:flex;gap:6px;margin:4px 0 10px}
 .seg button{flex:1;padding:8px;border:1px solid var(--line);border-radius:10px;background:transparent}
 .seg button.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
@@ -50,10 +89,29 @@ h2{margin:0 0 6px}
 .score b{font-size:17px}
 .quit{right:12px;top:8px;width:30px;height:30px;border-radius:50%;border:1px solid #fff7;background:#0004;padding:0}
 .info{right:50px}
-.infop{left:50%;top:50%;transform:translate(-50%,-50%);width:680px;max-height:360px;overflow:auto;text-align:left;font-size:13px;z-index:6}
+.infop{left:50%;top:50%;transform:translate(-50%,-50%);width:680px;max-height:372px;overflow:auto;text-align:left;font-size:13px;z-index:6}
 .infop h2{margin:0 0 6px}
 .infop ul{margin:6px 0;padding-left:20px}
-.infop li{margin:4px 0}
+.infop ol{margin:6px 0;padding-left:22px}
+.infop li{margin:2px 0}
+.infop .go{padding:8px;font-size:15px}
+.infop li.now{background:#e0b04a33;border-radius:6px}
+.ib{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:6px;padding:0;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;font:700 11px system-ui,sans-serif;vertical-align:middle;cursor:pointer}
+.infop.wide{width:800px;max-height:376px;padding:12px 16px}
+.infop.wide h2{margin:0 0 4px;font-size:20px}
+.infop.wide p{margin:2px 0}
+.infop.wide .go{padding:6px;font-size:14px}
+.lvt{width:100%;border-collapse:collapse;font-size:11.5px;margin:3px 0}
+.lvt th{text-align:left;font-weight:700;padding:3px 6px}
+.lvt td{padding:3px 6px;vertical-align:top;border-top:1px solid var(--line)}
+.lvt tr.now{background:#e0b04a33}
+.lvt td:nth-child(1){width:196px}
+.lvt td:nth-child(3){width:128px}
+.lvt td:nth-child(4){width:98px}
+.bar{position:relative;height:7px;border-radius:4px;background:#0002;margin-top:3px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--brass)}
+.bar b{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:#0007}
+.infop .fn{font-size:11.5px;opacity:.8;margin:4px 0 6px}
 .seat{text-align:center;font-size:12px}
 .nm{display:inline-block;padding:1px 8px;border-radius:9px;background:#0005;margin-bottom:3px}
 .turn .nm{background:var(--brass);color:#2a1d00;font-weight:700}
@@ -139,11 +197,33 @@ const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
 const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
 const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
-let S={bestOf:5,ccw:true,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,tm=0,info=false,rules=false;
+let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null;
+// Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
+const KEY='domino-loopbaan';
+const fresh=()=>({naam:'',niv:1,master:false,cert:null,pw:0,pl:0,mw:0,ml:0,ups:0,downs:0,hist:[]});
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));return v&&v.niv?{...fresh(),...v}:fresh()}catch(e){return fresh()}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}}
+let C=load();
+const lvl=()=>C.master?LV.length:Math.min(LV.length,Math.max(1,C.niv));
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// Uitslag van een wedstrijd: promoveren, degraderen of (op niveau 5) het Master-certificaat
+function endMatch(win){
+  const from=C.niv;let to=from,kind;
+  if(C.master)kind='meester';
+  else if(from===1){if(win){to=2;kind='up'}else kind='stay'}
+  else if(from<LV.length){if(win){to=from+1;kind='up'}else{to=from-1;kind='down'}}
+  else if(win)kind='master';else{to=from-1;kind='down'}
+  C.mw+=win?1:0;C.ml+=win?0:1;if(kind==='up')C.ups++;if(kind==='down')C.downs++;
+  C.hist.push({van:from,w:win?1:0,pw:rw,pl:rl});
+  if(!C.master)C.niv=to;
+  if(kind==='master'){C.master=true;C.cert={naam:C.naam||'Speler',datum:Date.now(),hist:C.hist.slice(),mw:C.mw,ml:C.ml,pw:C.pw,pl:C.pl,ups:C.ups,downs:C.downs}}
+  save();return{kind,from,to,win};
+}
+function restart(){C={...fresh(),naam:C.naam,cert:C.cert};save();render()}
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
-function start(){wins=[0,0];round=0;deal()}
-function reset(){G=null;tok++;wins=[0,0];round=0;render()}
+function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;deal()}
+function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;render()}
 function deal(){
   tok++;round++;
   const all=[];
@@ -183,21 +263,58 @@ function endsAfter(s,side){
   const L=G.chain[0].a,R=G.chain[G.chain.length-1].b;
   return side==='L'?[s.b===L?s.a:s.b,R]:[L,s.a===R?s.b:s.a];
 }
-// Computerspeler: kijkt alleen naar eigen hand, tafel en wie er gepast heeft
-function aiMove(seat){
+// Conventies (nummer = vaste code). Een niveau activeert de eerste (niveau-1) conventies van ORDER.
+const CONV={
+ 2:['Sterkste getal','Laat het getal waar hij de meeste stenen van heeft op een uiteinde komen of blijven.'],
+ 3:['Niet op de steen van je maat','Legt liever niet aan op de open kant van een steen die zijn maat legde.'],
+ 4:['Naar je maat toe spelen','Laat liever het getal liggen waar zijn maat naartoe speelt.'],
+ 5:['Dubbels vroeg','Legt een dubbel zo vroeg mogelijk.'],
+ 6:['Geen entree voor een dubbel','Laat geen getal open waarvan de speler na hem nog een dubbel kan hebben.'],
+ 7:['Getal van je maat afsluiten','Laat een getal waarop zijn maat paste niet open liggen.'],
+ 8:['Tegenstander laten vastlopen','Laat een getal open liggen waarop een tegenstander paste.'],
+ 9:['Stenen tellen','Laat een getal open liggen waar niemand anders nog een steen van heeft.'],
+ 10:['Dubbel blokkeren','Laat op elk uiteinde een getal liggen dat een andere tegenstander mist.']
+};
+// Volgorde van effect (gemeten in simulaties); conventies zonder merkbaar effect zijn niet opgenomen.
+const ORDER=[6,5,4,2];
+// Per niveau: waar de computer op let, en de gemeten winkans in % (tegen het niveau eronder, tegen niveau 1).
+// Gemeten met 60.000 gesimuleerde rondes per vergelijking, computers aan beide kanten (ongeveer 0,5 procentpunt nauwkeurig).
+const INFO=[
+ ['Let op niets. Elke steen die past is even waarschijnlijk.',null,null],
+ ['Zijn eigen stenen, welke dubbels al op tafel liggen en waarop de speler na hem paste. Hij laat geen getal open waarvan die speler nog een dubbel kan hebben.',62,62],
+ ['Zijn eigen stenen: een dubbel legt hij zo vroeg mogelijk, want die raak je later moeilijk kwijt.',53,65],
+ ['De tafel: welke stenen zijn maat legde en welk getal hij daarmee open liet. Dat getal laat hij liever liggen.',52,67],
+ ['Zijn eigen stenen: hij telt per getal wat hij heeft en laat zijn sterkste getal liever op een uiteinde komen of blijven.',51,67]
+];
+const LV=[['Willekeurig','Legt een willekeurige steen die past, aan een willekeurige kant.'],...ORDER.map(k=>CONV[k])];
+// Waar de maat naartoe speelt: af te lezen aan de stenen die hij legde (het getal dat hij open liet)
+function favNums(seat){
+  const c=G.chain,ai=c.indexOf(G.anchor),f=[0,0,0,0,0,0,0];
+  c.forEach((s,i)=>{if(s.by!==seat)return;
+    if(i===ai){f[s.a]+=s.a===s.b?2:1;if(s.a!==s.b)f[s.b]++}else f[i<ai?s.a:s.b]++});
+  return f;
+}
+// Computerspeler: kijkt alleen naar eigen hand, tafel en wie er op welk getal gepast heeft.
+// Hoger niveau = meer conventies; bij een conflict wint de conventie met de meeste impact (de eerste in ORDER).
+function aiMove(seat,lv=lvl(),set=null){
+  const ms=moves(seat),on=set||ORDER.slice(0,lv-1);
+  if(!on.length)return ms[Math.random()*ms.length|0];
+  const act=k=>on.includes(k),W=k=>12-on.indexOf(k);
+  const hand=G.hands[seat],c=G.chain,P=(seat+2)%4,O=[(seat+1)%4,(seat+3)%4],N=S.ccw?(seat+3)%4:(seat+1)%4;
+  const fav=act(4)?favNums(P):null,top=fav?Math.max(...fav):0,has=(t,n)=>t.a===n||t.b===n;
   let best=null,bs=-1e9;
-  for(const m of moves(seat)){
-    const s=G.hands[seat][m.i],es=endsAfter(s,m.side);
-    const rest=G.hands[seat].filter((_,j)=>j!==m.i);
-    let sc=s.a+s.b+(s.a===s.b?4:0)+Math.random();
-    sc+=rest.filter(t=>es.some(e=>t.a===e||t.b===e)).length*3;
-    const en=m.side==='L'?G.chain[0]:m.side==='R'?G.chain[G.chain.length-1]:null;
-    if(en&&en.by===(seat+2)%4)sc-=5;
-    for(const e of es){
-      if(G.passed[(seat+1)%4].has(e))sc+=2;
-      if(G.passed[(seat+3)%4].has(e))sc+=2;
-      if(G.passed[(seat+2)%4].has(e))sc-=3;
-    }
+  for(const m of ms){
+    const s=hand[m.i],es=endsAfter(s,m.side),rest=hand.filter((_,j)=>j!==m.i);
+    let sc=Math.random()*.5;
+    if(act(2)){const cnt=[0,1,2,3,4,5,6].map(n=>rest.filter(t=>has(t,n)).length),mx=Math.max(...cnt);if(mx>=2)for(const e of es)if(cnt[e]===mx)sc+=W(2)}
+    if(act(3)){const en=m.side==='L'?c[0]:m.side==='R'?c[c.length-1]:null;if(en&&en.by===P)sc-=W(3)}
+    if(act(4)&&top>0)for(const e of es)if(fav[e]===top)sc+=W(4);
+    if(act(5)&&s.a===s.b)sc+=W(5);
+    if(act(6))for(const e of es){const dbl=c.some(t=>t.a===e&&t.b===e)||(s.a===e&&s.b===e)||rest.some(t=>t.a===e&&t.b===e);if(!dbl&&!G.passed[N].has(e))sc-=W(6)}
+    if(act(7))for(const e of es)if(G.passed[P].has(e))sc-=W(7);
+    if(act(8))for(const o of O)for(const e of es)if(G.passed[o].has(e))sc+=W(8);
+    if(act(9))for(const e of es){const used=c.filter(t=>has(t,e)).length+(has(s,e)?1:0)+rest.filter(t=>has(t,e)).length;if(used>=7)sc+=W(9)}
+    if(act(10)&&((G.passed[O[0]].has(es[0])&&G.passed[O[1]].has(es[1]))||(G.passed[O[1]].has(es[0])&&G.passed[O[0]].has(es[1]))))sc+=W(10);
     if(sc>bs){bs=sc;best=m}
   }
   return best;
@@ -234,16 +351,20 @@ function put(side){if(G.sel!==null)play(G.sel,side)}
 function play(i,side){G.sel=null;place(0,i,side);after(0)}
 function tik(){if(G.turn||G.over||moves(0).length)return;doPass(0)}
 function finish(seat){
-  let team,note;
+  let team,note,blk=null;
   if(seat!==null){team=seat%2;note=`${seat?SHORT[seat]+' heeft':'Jij hebt'} geen stenen meer.`}
   else{
-    const sum=k=>[k,k+2].reduce((n,s)=>n+G.hands[s].reduce((x,y)=>x+y.a+y.b,0),0);
-    const a=sum(0),b=sum(1);
-    team=a<b?0:b<a?1:null;
-    note=`Geblokkeerd. Stippen in de hand: wij ${a}, zij ${b}.`+(team===null?' Gelijk: geen punt.':' Het laagste telt.');
+    // Dicht: wie de minste stippen heeft, wint voor zijn team. Hebben spelers van beide teams evenveel, dan telt het teamtotaal.
+    const p=[0,1,2,3].map(x=>G.hands[x].reduce((n,t)=>n+t.a+t.b,0)),mn=Math.min(...p),lows=[0,1,2,3].filter(x=>p[x]===mn);
+    const a=p[0]+p[2],b=p[1]+p[3];note='Geblokkeerd.';
+    if(new Set(lows.map(x=>x%2)).size===1){team=lows[0]%2;blk={how:lows.length===1?'min':'min2',lows,mn,a,b}}
+    else{team=a<b?0:b<a?1:null;blk={how:'tot',lows,mn,a,b}}
   }
   const dos=S.dos&&seat!==null&&!!G.dos;if(team!==null)wins[team]+=dos?2:1;
-  G.over={team,note,seat,dos};render();
+  if(team===0){rw++;C.pw++}else if(team===1){rl++;C.pl++}
+  const need=Math.ceil(S.bestOf/2);let career=null;
+  if(wins.some(w=>w>=need))career=endMatch(wins[0]>=need);else save();
+  G.over={team,note,seat,dos,blk,career};render();
 }
 // Slang: twee armen vanaf de eerste steen; rechts loopt naar beneden, links naar boven.
 // Dubbels liggen dwars (1 cel breed), de rest ligt (2 cellen breed). Stenen verschuiven nooit.
@@ -271,6 +392,17 @@ function smooth(ty,bf,n){
   if(n&&TF&&TF!==cur){b.style.transform=TF;void b.offsetWidth;b.style.transition='transform .45s ease';b.style.transform=cur}
   TF=n?cur:'';
 }
+function toggleLvInfo(){lvi=!lvi;render()}
+function lvInfoHTML(){
+  if(!lvi)return'';
+  const bar=p=>`<div class="bar"><i style="width:${p}%"></i><b></b></div>`;
+  return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleLvInfo()"></div><div class="abs card infop wide"><h2>Wat doet de computer per niveau?</h2>
+<p>De computer kijkt nooit in jouw stenen: alleen in zijn eigen stenen, de tafel en wie op welk getal paste. Elk niveau doet ook alles van de niveaus eronder.</p>
+<table class="lvt"><tr><th>Niveau</th><th>Waar let de computer op?</th><th>Tegen vorig niveau</th><th>Tegen niveau 1</th></tr>
+${LV.map(([n],i)=>`<tr${i+1===lvl()?' class="now"':''}><td><b>${i+1}. ${n}</b></td><td>${INFO[i][0]}</td><td>${INFO[i][1]==null?'-':INFO[i][1]+'% <small>(+'+(INFO[i][1]-50)+')</small>'+bar(INFO[i][1])}</td><td>${INFO[i][2]==null?'-':INFO[i][2]+'%'}</td></tr>`).join('')}</table>
+<p class="fn">Winkans = % rondes dat dit niveau wint, gemeten in gesimuleerde rondes met computers aan beide kanten. 50% is even sterk. Met jou kan het afwijken.</p>
+<button class="go" onclick="toggleLvInfo()">Sluiten</button></div>`;
+}
 function toggleInfo(){info=!info;G?step():render()}
 function toggleRules(){rules=!rules;render()}
 function rulesHTML(){
@@ -284,33 +416,58 @@ function rulesHTML(){
 <li><b>Passen:</b> kun je niet aanleggen, dan tik je op tafel en is de volgende aan de beurt.</li>
 <li><b>Winnen:</b> het team waarvan een speler als eerste geen stenen meer heeft, wint de ronde en krijgt een punt.</li>
 ${S.dos?'<li><b>Dos cabes:</b> kon je met je laatste steen aan beide kanten aanleggen, dan tellen de punten dubbel.</li>':''}
-<li><b>Dicht:</b> past niemand meer, dan wint het team met de minste stippen in de hand. Bij gelijkspel krijgt niemand een punt.</li>
+<li><b>Dicht:</b> past niemand meer, dan wint het team van de speler met de minste stippen in de hand. Hebben twee spelers van verschillende teams evenveel, dan telt het totaal van beide teams. Is dat ook gelijk, dan krijgt niemand een punt.</li>
 <li><b>Wedstrijd:</b> je speelt best of 5, 9 of 19. Wie als eerste meer dan de helft van de rondes heeft, wint de wedstrijd.</li></ul>
 <button class="go" onclick="toggleRules()">Sluiten</button></div>`;
 }
 function infoHTML(){
   if(!info)return'';
-  return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleInfo()"></div><div class="abs card infop"><h2>Zo kiezen de computerspelers</h2>
-<p>West, Oost en je maat Noord kijken alleen naar hun eigen stenen, de stenen op tafel en wie er op welk cijfer gepast heeft. Voor elke steen die past, per kant waar hij kan liggen, rekenen ze een score uit. De hoogste score wint.</p>
-<ul><li><b>Zware stenen eerst:</b> het aantal stippen telt mee, want bij een geblokkeerd spel wint het laagste aantal.</li>
-<li><b>Dubbels vroeg:</b> een dubbel levert extra punten op, omdat je die later moeilijk kwijtraakt.</li>
-<li><b>Opties openhouden:</b> elke andere steen in hun hand die na de zet nog kan aanleggen, levert punten op.</li>
-<li><b>Passen onthouden:</b> wie past, heeft dat cijfer niet. Een cijfer waar een tegenstander op gepast heeft, laten ze liever open liggen. Een cijfer waar hun maat op gepast heeft, liever niet.</li>
-<li><b>Niet op de steen van je maat:</b> ze leggen liever niet aan op de open kant van een steen die hun maat heeft gelegd. Die kant heeft de maat misschien zelf nodig.</li>
-<li><b>Een beetje toeval:</b> een kleine willekeurige waarde zorgt voor variatie. Ze passen alleen als er echt geen steen past.</li></ul>
-<p>Ze plannen niet vooruit, houden niet bij welke cijfers al op zijn en geven geen seintjes aan hun maat. Redelijk, maar te verslaan.</p>
+  return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleInfo()"></div><div class="abs card infop"><h2>Niveaus en promotie</h2>
+<p>Je begint op niveau 1, waar de computer willekeurig speelt. Win je een wedstrijd, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau terug (op niveau 1 blijf je). Wie op niveau 5 wint, krijgt het Master-certificaat in Domino. West, Oost en je maat Noord spelen alle drie op jouw niveau. Een hoger niveau doet alles van de lagere niveaus en voegt een conventie toe. Bij een conflict wint de conventie van het lagere niveau. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste.</p>
+<ol>${LV.map(([n,d],i)=>`<li${i+1===lvl()?' class="now"':''}><b>${n}:</b> ${d}</li>`).join('')}</ol>
 <button class="go" onclick="toggleInfo()">Sluiten</button></div>`;
 }
 function seg(k,opts){
   return`<div class="seg">${opts.map(([v,l])=>`<button class="${S[k]===v?'on':''}" onclick="S.${k}=${v};render()">${l}</button>`).join('')}</div>`;
 }
 function setup(){
+  const lv=lvl(),L=LV[lv-1],M=C.master;
+  const note=M?'Masterspel: je kunt niets meer winnen of verliezen.':lv===1?'Win je een wedstrijd, dan ga je naar niveau 2. Verlies je, dan blijf je hier.':lv<LV.length?`Win je, dan ga je naar niveau ${lv+1}. Verlies je, dan terug naar niveau ${lv-1}.`:'Win je, dan krijg je het Master-certificaat. Verlies je, dan terug naar niveau '+(lv-1)+'.';
   return`<div class="abs card setup"><h1>Domino</h1><p>Jij en Noord tegen West en Oost</p>
-<b>Aantal spellen</b>${seg('bestOf',[[5,'Best of 5'],[9,'Best of 9'],[19,'Best of 19']])}
-<b>Speelrichting</b>${seg('ccw',[[true,'Tegen de klok in'],[false,'Met de klok mee']])}
-<label class="chk"><input type="checkbox" ${S.dos?'checked':''} onchange="S.dos=this.checked"> Met dos cabes (dubbele punten)</label>
-<button class="lnk" onclick="toggleRules()">Spelregels</button>
-<button class="go" onclick="start()">Start</button></div><button class="abs quit" onclick="toggleInfo()" aria-label="Uitleg">i</button>${infoHTML()}${rulesHTML()}`;
+<div class="cols"><div><b>Aantal spellen</b>${seg('bestOf',[[5,'Best of 5'],[9,'Best of 9'],[19,'Best of 19']])}
+<b>Speelrichting</b>${seg('ccw',[[false,'Met de klok mee'],[true,'Tegen de klok in']])}</div>
+<div class="lvbox"><div class="lvb${M?' gold':''}">${M?'🏆':lv}</div><div><b>${M?'Master in Domino':'Niveau '+lv+' van '+LV.length}</b><button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button><p>${L[0]}: ${L[1]}</p></div>
+<div class="note">${note}${M?' <button class="lnk" onclick="restart()">Nieuw traject</button>':''}</div>
+<input class="naam" type="text" maxlength="24" placeholder="Jouw naam (voor het certificaat)" value="${esc(C.naam)}" oninput="C.naam=this.value;save()" aria-label="Jouw naam">
+<div class="stat">Potjes: ${C.pw} gewonnen · ${C.pl} verloren</div></div></div>
+<div class="row"><label class="chk"><input type="checkbox" ${S.dos?'checked':''} onchange="S.dos=this.checked"> Met dos cabes (dubbele punten)</label>
+<span>${C.cert?'<button class="lnk" onclick="showCert()">🏆 Certificaat</button> ':''}<button class="lnk" onclick="toggleRules()">Spelregels</button></span></div>
+<button class="go" onclick="start()">Start</button></div><button class="abs quit" onclick="toggleInfo()" aria-label="Uitleg">i</button>${infoHTML()}${rulesHTML()}${lvInfoHTML()}${ovlHTML()}`;
+}
+// Promotie, degradatie en certificaat
+function showCareer(){const r=G.over.career;ovl=r.kind==='master'?'cert':'career';render()}
+function showCert(){ovl='cert';render()}
+function closeOvl(){ovl=null;G?reset():render()}
+const confetti=n=>Array.from({length:n},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'][i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('');
+function ovlHTML(){
+  if(!ovl)return'';
+  if(ovl==='cert'){
+    const c=C.cert;if(!c)return'';
+    const d=new Date(c.datum).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+    return`<div class="abs ovl">${confetti(60)}<div class="card cert"><div class="csub">Certificaat</div><h2>Master in Domino</h2>
+<p>Dit certificaat is uitgereikt aan</p><div class="who">${esc(c.naam)}</div>
+<p>voor het verslaan van de computer op het hoogste niveau.</p>
+<div class="cap">Je route: elk rondje is een wedstrijd, het cijfer is het niveau (groen gewonnen, rood verloren)</div><div class="route">${c.hist.map(h=>`<span class="rc ${h.w?'rcw':'rcl'}">${h.van}</span>`).join('')}<span class="seal">🏆</span></div>
+<p><b>${c.hist.length}</b> wedstrijden: <b>${c.mw}</b> gewonnen, <b>${c.ml}</b> verloren · potjes: <b>${c.pw}</b> gewonnen, <b>${c.pl}</b> verloren · <b>${c.ups}</b> promoties, <b>${c.downs}</b> degradaties</p>
+<p class="dt">${d}</p><button class="go" onclick="closeOvl()">Doorgaan</button></div></div>`;
+  }
+  const r=G&&G.over&&G.over.career;if(!r)return'';
+  const up=r.kind==='up',down=r.kind==='down',N=LV[r.to-1];
+  const head=up?'Promotie!':down?'Een stapje terug':'Nog niet gelukt';
+  const txt=up?`Van niveau ${r.from} naar niveau ${r.to}. Nieuw bij de computer: ${N[0].toLowerCase()}.`:down?`Terug naar niveau ${r.to}. Oefening baart kunst!`:'Je blijft op niveau 1. Win een wedstrijd om door te gaan.';
+  return`<div class="abs ovl">${up?confetti(50):''}<div class="card lvcard ${up?'up':down?'down':'stay'}"><div class="lvbadge">${r.to}</div>
+<h2>${head}</h2><p class="big">${up||down?'Niveau '+r.to+': '+N[0]:'Niveau 1: '+LV[0][0]}</p><p>${txt}</p><div class="sp">${up?'✨ ⭐ ✨':down?'😅':'💪'}</div>
+<button class="go" onclick="closeOvl()">Doorgaan</button></div></div>`;
 }
 function render(){
   const a=$('app');
@@ -346,20 +503,22 @@ function render(){
   const t=G.over&&G.over.team;
   const sv=G.over?G.over.seat:null,tot=s=>G.hands[s].reduce((n,x)=>n+x.a+x.b,0),wt=tot(0)+tot(2),zt=tot(1)+tot(3);
   const head=!G.over?'':done?(t===0?'Wedstrijd gewonnen!':'Wedstrijd verloren'):G.over.dos?'Dos cabes!':sv===null?'Dicht!':sv===0?'Jij bent uit!':`${SHORT[sv]} is uit!`;
-  const sub=!G.over?'':done?`Stand: wij ${wins[0]} – ${wins[1]} zij${G.over.dos?' · dos cabes!':''}`:t===null?'Gelijk: niemand krijgt een punt':sv===null?`Wij ${wt} – ${zt} zij: het laagste telt`:G.over.dos?`Dubbele punten voor ${t===0?'ons':'hen'}`:t===0?'Ronde voor ons':'Ronde voor hen';
+  const bl=G.over&&G.over.blk,blkTxt=bl?(bl.how==='min'?`${NM[bl.lows[0]]} heeft de minste stippen (${bl.mn})`:bl.how==='min2'?`${NM[bl.lows[0]]} en ${NM[bl.lows[1]]} hebben de minste stippen (${bl.mn})`:`Gelijk laagste (${bl.mn}): totaal wij ${bl.a}, zij ${bl.b}`):'';
+  const sub=!G.over?'':done?`Stand: wij ${wins[0]} – ${wins[1]} zij${G.over.dos?' · dos cabes!':''}`:t===null?(bl?blkTxt+': geen punt':'Gelijk: niemand krijgt een punt'):sv===null?blkTxt:G.over.dos?`Dubbele punten voor ${t===0?'ons':'hen'}`:t===0?'Ronde voor ons':'Ronde voor hen';
   const dots=k=>`<div class="dots"><span>${k?'Zij':'Wij'}</span>${Array.from({length:need},(_,i)=>`<i class="${i<wins[k]?'on t'+k:''}"></i>`).join('')}</div>`;
   const showFx=G.over&&!G.fx;if(G.over)G.fx=true;
   const nc=showFx&&t===0?(done?90:G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
   const fx=showFx?`<div class="abs fx"><div class="abs rib ${t===0?'':t===null?'g':'l'}">${head}<small>${sub}</small></div>${Array.from({length:nc},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${CC[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('')}</div>`:'';
-  const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl"><h3>${head}</h3><div>${sub}</div><button class="go" onclick="${done?'reset()':'deal()'}">${done?'Nieuwe wedstrijd':'Volgende ronde'}</button></div>`:'';
-  a.innerHTML=`<div class="abs score">${dots(0)}${dots(1)}Best of ${S.bestOf} · ronde ${round} · ${S.ccw?'↺':'↻'}</div>
+  const cr=G.over&&G.over.career&&G.over.career.kind!=='meester';
+  const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl"><h3>${head}</h3><div>${sub}</div><button class="go" onclick="${done?(cr?'showCareer()':'reset()'):'deal()'}">${done?(cr?'Verder':'Nieuwe wedstrijd'):'Volgende ronde'}</button></div>`:'';
+  a.innerHTML=`<div class="abs score">${dots(0)}${dots(1)}Best of ${S.bestOf} · ronde ${round} · niveau ${lvl()} <button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button> · ${S.ccw?'↺':'↻'}</div>
 <button class="abs quit" onclick="reset()" aria-label="Stoppen">✕</button>
 <button class="abs quit info" onclick="toggleInfo()" aria-label="Uitleg">i</button>
 ${seat(1)}${seat(2)}${seat(3)}
 <div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
 <div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
-${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${infoHTML()}`;
+${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${infoHTML()}${lvInfoHTML()}${ovlHTML()}`;
   smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
