@@ -218,7 +218,7 @@ const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
 const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
 const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
-let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,bub=null,lastBub=0,idle1=0,idle2=0;
+let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,bub=null,lastKey='',idle1=0,idle2=0;
 // Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
 const KEY='domino-loopbaan';
 const fresh=()=>({naam:'',niv:1,master:false,cert:null,pw:0,pl:0,mw:0,ml:0,ups:0,downs:0,hist:[]});
@@ -253,10 +253,9 @@ function deal(){
   const n=all.length/4;
   const hands=[0,1,2,3].map(k=>all.slice(k*n,k*n+n).sort((x,y)=>x.a-y.a||x.b-y.b));
   const st=hands.findIndex(h=>h.some(s=>s.a===S.max&&s.b===S.max));
-  G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],
+  G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],said:false,slot:3+(Math.random()*9|0),
      note:`${st?SHORT[st]+' heeft':'Jij hebt'} de dubbel ${S.max} en begint`};
   step();
-  {const t=tok;setTimeout(()=>{if(t===tok&&G&&!G.over&&say(ai1(),'bacos',{p:.4}))render()},1800)}
 }
 function moves(seat){
   const h=G.hands[seat],c=G.chain,out=[];
@@ -270,7 +269,7 @@ function moves(seat){
 }
 function place(seat,i,side){
   const s=G.hands[seat].splice(i,1)[0],c=G.chain;
-  if(seat%2===1&&c.length){const e=side==='L'?c[0].a:c[c.length-1].b;if(G.hands[0].some(t=>t.a===e&&t.b===e))say(seat,'kerkhof',{cd:false})}
+  if(seat%2===1&&c.length){const e=side==='L'?c[0].a:c[c.length-1].b;if(G.hands[0].some(t=>t.a===e&&t.b===e))say(seat,'kerkhof',{p:.5})}
   // dos cabes: de laatste steen past aan beide kanten
   G.dos=!G.hands[seat].length&&c.length>0&&(s.a===c[0].a||s.b===c[0].a)&&(s.a===c[c.length-1].b||s.b===c[c.length-1].b);
   if(side==='c')c.push({a:s.a,b:s.b});
@@ -344,25 +343,32 @@ function aiMove(seat,lv=lvl(),set=null){
 }
 // Wolkjes met grapjes: verschijnen af en toe, blokkeren niets en verdwijnen vanzelf
 const BUB={
- beurt:['choller, je bent aan de beurt!'],
- seinen:['zit je nou te seinen pikkebaas?'],
- knokkels:['heb je pleisters meegenomen voor je knokkels?'],
- kerkhof:['sorry vriend, maar je dubbel is gaan rusten op het kerkhof'],
- bacos:['swa maak ons nog een paar bacos, beetje cola voor de kleur'],
- schoenen:['ik heb schoenen meegenomen die jou prima gaan passen!'],
+ beurt:['choller, je bent aan de beurt!','kom op man, de stenen worden koud!','wakker worden, het is jouw beurt!','denk je nou aan je pensioen of aan je zet?'],
+ seinen:['zit je nou te seinen pikkebaas?','ik zie je kijken, hoor!','je maat kan je niet helpen, hè!'],
+ knokkels:['heb je pleisters meegenomen voor je knokkels?','rustig aan, de tafel is niet van jou!','zo klinkt een dubbel, jongens!','de buren hebben het gehoord!'],
+ kerkhof:['sorry vriend, maar je dubbel is gaan rusten op het kerkhof','begraven die dubbel, rust zacht!','daar ging je dubbel, dag dag!'],
+ tafel:['swa maak ons nog een paar bacos, beetje cola voor de kleur','wie haalt er nog wat te drinken?','laat de stenen maar rollen!','niet zo snel, we zitten hier gezellig!','rustig spelen, de stenen bijten niet!','dit wordt een lange avond, jongens!','schuif maar aan, er is nog plek!'],
+ schoenen:['ik heb schoenen meegenomen die jou prima gaan passen!','tik tik tik, de mooiste muziek aan tafel!','niks? lekker voor ons!','oei, pas! dat hoor ik graag'],
  dos:['dooosssssssss kabes!!'],
- pas:['tik tik, ik heb niks hoor!','ik pas, spelen jullie maar lekker door'],
- wij:['beginnersgeluk, dat is het!','dat was een ongelukje, hoor'],
- zij:['zo, die staat!','dat noem ik nou domino']
+ pas:['tik tik, ik heb niks hoor!','ik pas, spelen jullie maar lekker door','niks voor mij, sorry!'],
+ wij:['beginnersgeluk, dat is het!','dat was een ongelukje, hoor','we zijn nog niet klaar met jullie!'],
+ zij:['zo, die staat!','dat noem ik nou domino','kijk en leer, jongens!']
 };
+// Per soort wolkje komt elke tekst een keer voorbij voordat er een herhaald wordt (ook na heropenen van de app)
+function pickLine(key){
+  const t=BUB[key];if(t.length===1)return t[0];
+  C.seen=C.seen||{};let u=C.seen[key]||[];if(u.length>=t.length)u=[];
+  const left=t.map((_,i)=>i).filter(i=>!u.includes(i)),i=left[Math.random()*left.length|0];
+  u.push(i);C.seen[key]=u;save();return t[i];
+}
 const WHO=['Zuid','West','Noord (maat)','Oost'];
 const opp=()=>[1,3][Math.random()*2|0],ai1=()=>[1,2,3][Math.random()*3|0];
-// o.p = kans, o.big = groot wolkje, o.cd=false = wachttijd negeren, o.force = altijd tonen
+// Hooguit een wolkje per potje. o.p = kans, o.big = groot wolkje, o.force = altijd tonen (dos cabes)
 function say(seat,key,o={}){
-  const now=Date.now(),act=bub&&now<bub.until,p=o.p===undefined?1:o.p;
-  if(!G||(!o.force&&(act||(o.cd!==false&&now-lastBub<9000)||Math.random()>p)))return false;
-  const t=BUB[key],b={seat,text:t[Math.random()*t.length|0],until:now+(o.big?4300:3700),big:!!o.big,shown:false,out:false};
-  bub=b;lastBub=now;
+  const now=Date.now(),p=o.p===undefined?1:o.p;
+  if(!G||(!o.force&&(G.said||(bub&&now<bub.until)||(key===lastKey&&Math.random()<.7)||Math.random()>p)))return false;
+  const b={seat,text:pickLine(key),until:now+(o.big?4300:3700),big:!!o.big,shown:false,out:false};
+  bub=b;G.said=true;lastKey=key;
   setTimeout(()=>{if(bub===b){b.out=true;if(G)render()}},b.until-now-500);
   setTimeout(()=>{if(bub===b){bub=null;if(G)render()}},b.until-now);
   return true;
@@ -376,8 +382,8 @@ function bubHTML(){
 function idleTimers(){
   clearTimeout(idle1);clearTimeout(idle2);
   const t=tok,n=G.hist.length,still=()=>t===tok&&G&&!G.over&&G.turn===0&&G.hist.length===n&&!info&&!ovl;
-  idle1=setTimeout(()=>{if(still()&&say(S.ccw?1:3,'beurt',{cd:false}))render()},7000);
-  idle2=setTimeout(()=>{if(still()&&say(opp(),'seinen',{cd:false}))render()},16000);
+  idle1=setTimeout(()=>{if(still()&&say(S.ccw?1:3,'beurt'))render()},7000);
+  idle2=setTimeout(()=>{if(still()&&say(opp(),'seinen'))render()},16000);
 }
 function step(){
   render();
@@ -393,11 +399,11 @@ function ai(){
   if(m){place(t,m.i,m.side);after(t)}else doPass(t);
 }
 function after(t){if(!G.hands[t].length)return finish(t);advance()}
-function advance(){G.turn=(G.turn+(S.ccw?3:1))%4;step()}
+function advance(){G.turn=(G.turn+(S.ccw?3:1))%4;if(!G.said&&G.hist.length>=G.slot)G.turn===0?say(S.ccw?1:3,'beurt',{p:.8}):say(ai1(),'tafel',{p:.8});step()}
 function doPass(t){
   const c=G.chain;
   G.passed[t].add(c[0].a);G.passed[t].add(c[c.length-1].b);
-  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});if(t)say(t,'pas',{p:.25});
+  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});if(t)say(t,'pas',{p:.15});
   G.passes>=4?finish(null):advance();
 }
 function pick(i){
@@ -410,8 +416,8 @@ function pick(i){
   G.sel=i;render();
 }
 function put(side){if(G.sel!==null)play(G.sel,side)}
-function play(i,side){G.sel=null;const dbl=G.hands[0][i].a===G.hands[0][i].b;place(0,i,side);if(dbl)say(opp(),'knokkels',{p:.5});after(0)}
-function tik(){if(G.turn||G.over||moves(0).length)return;say(opp(),'schoenen',{p:.7});doPass(0)}
+function play(i,side){G.sel=null;const dbl=G.hands[0][i].a===G.hands[0][i].b;place(0,i,side);if(dbl)say(opp(),'knokkels',{p:.35});after(0)}
+function tik(){if(G.turn||G.over||moves(0).length)return;say(opp(),'schoenen',{p:.5});doPass(0)}
 function finish(seat){
   let team,note,blk=null;
   if(seat!==null){team=seat%2;note=`${seat?SHORT[seat]+' heeft':'Jij hebt'} geen stenen meer.`}
@@ -426,7 +432,7 @@ function finish(seat){
   if(team===0){rw++;C.pw++}else if(team===1){rl++;C.pl++}
   const need=Math.ceil(S.bestOf/2);let career=null;
   if(wins.some(w=>w>=need))career=endMatch(wins[0]>=need);else save();
-  if(dos)say(seat,'dos',{force:true,big:true});else if(team===0)say(opp(),'wij',{p:.4});else if(team===1)say(opp(),'zij',{p:.4});
+  if(dos)say(seat,'dos',{force:true,big:true});else if(team===0)say(opp(),'wij',{p:.35});else if(team===1)say(opp(),'zij',{p:.35});
   G.over={team,note,seat,dos,blk,career};render();
 }
 // Slang: twee armen vanaf de eerste steen; rechts loopt naar beneden, links naar boven.
