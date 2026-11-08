@@ -102,6 +102,21 @@ h2{margin:0 0 6px}
 .infop li{margin:2px 0}
 .infop .go{padding:8px;font-size:15px}
 .infop li.now{background:#e0b04a33;border-radius:6px}
+.bub{max-width:230px;padding:6px 12px 8px;border-radius:18px;background:#fff;color:#1d2b23;font-size:13px;line-height:1.25;box-shadow:0 4px 10px #0006;pointer-events:none;z-index:4}
+.bub small{display:block;font-weight:700;font-size:10.5px;color:#2c7a4f;margin-bottom:1px}
+.bub.b1 small,.bub.b3 small{color:#c8553f}
+.bub::after{content:"";position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg)}
+.bub.pop{animation:bubpop .3s cubic-bezier(.2,.9,.3,1.3)}
+.bub.out{animation:bubout .5s forwards}
+@keyframes bubpop{from{transform:scale(.5);opacity:0}}
+@keyframes bubout{to{opacity:0;transform:translateY(-6px)}}
+.bub.b1{left:14px;top:46px}.bub.b1::after{left:24px;bottom:-5px}
+.bub.b3{right:14px;top:46px}.bub.b3::after{right:24px;bottom:-5px}
+.bub.b2{left:566px;top:16px;max-width:190px}.bub.b2::after{left:-5px;top:16px}
+.bub.b0{left:128px;top:262px}.bub.b0::after{left:150px;bottom:-5px}
+.bub.big{max-width:270px;font-size:21px;font-weight:800;padding:8px 16px 10px;background:#ffe9a6}
+.bub.big::after{background:#ffe9a6}
+.bub.big small{font-size:11px}
 .ib{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:6px;padding:0;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;font:700 11px system-ui,sans-serif;vertical-align:middle;cursor:pointer}
 .infop.wide{width:800px;max-height:376px;padding:12px 16px}
 .infop.wide h2{margin:0 0 4px;font-size:20px}
@@ -161,7 +176,7 @@ h2{margin:0 0 6px}
 @keyframes pulse{50%{transform:scale(1.07)}}
 .d.new,.pl.new{animation:drop .6s cubic-bezier(.2,.8,.25,1)}
 @keyframes drop{from{transform:translate(var(--fx),var(--fy)) scale(1.2);opacity:0}50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.d.new,.pl.new,.gh,.pas.pop{animation:none}.cf,.rib{display:none}}
+@media (prefers-reduced-motion:reduce){.d.new,.pl.new,.gh,.pas.pop,.bub.pop,.bub.out{animation:none}.cf,.rib{display:none}}
 .st{padding:0;border:0;background:none;border-radius:8px;transition:transform .12s}
 .st:disabled{cursor:default}
 .st.ok{transform:translateY(-8px)}
@@ -203,7 +218,7 @@ const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
 const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
 const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
-let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null;
+let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,bub=null,lastBub=0,idle1=0,idle2=0;
 // Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
 const KEY='domino-loopbaan';
 const fresh=()=>({naam:'',niv:1,master:false,cert:null,pw:0,pl:0,mw:0,ml:0,ups:0,downs:0,hist:[]});
@@ -228,8 +243,8 @@ function endMatch(win){
 function restart(){C={...fresh(),naam:C.naam,cert:C.cert};save();render()}
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
-function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;deal()}
-function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;render()}
+function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;bub=null;deal()}
+function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;bub=null;render()}
 function deal(){
   tok++;round++;
   const all=[];
@@ -241,6 +256,7 @@ function deal(){
   G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],
      note:`${st?SHORT[st]+' heeft':'Jij hebt'} de dubbel ${S.max} en begint`};
   step();
+  {const t=tok;setTimeout(()=>{if(t===tok&&G&&!G.over&&say(ai1(),'bacos',{p:.4}))render()},1800)}
 }
 function moves(seat){
   const h=G.hands[seat],c=G.chain,out=[];
@@ -254,6 +270,7 @@ function moves(seat){
 }
 function place(seat,i,side){
   const s=G.hands[seat].splice(i,1)[0],c=G.chain;
+  if(seat%2===1&&c.length){const e=side==='L'?c[0].a:c[c.length-1].b;if(G.hands[0].some(t=>t.a===e&&t.b===e))say(seat,'kerkhof',{cd:false})}
   // dos cabes: de laatste steen past aan beide kanten
   G.dos=!G.hands[seat].length&&c.length>0&&(s.a===c[0].a||s.b===c[0].a)&&(s.a===c[c.length-1].b||s.b===c[c.length-1].b);
   if(side==='c')c.push({a:s.a,b:s.b});
@@ -325,9 +342,48 @@ function aiMove(seat,lv=lvl(),set=null){
   }
   return best;
 }
+// Wolkjes met grapjes: verschijnen af en toe, blokkeren niets en verdwijnen vanzelf
+const BUB={
+ beurt:['choller, je bent aan de beurt!'],
+ seinen:['zit je nou te seinen pikkebaas?'],
+ knokkels:['heb je pleisters meegenomen voor je knokkels?'],
+ kerkhof:['sorry vriend, maar je dubbel is gaan rusten op het kerkhof'],
+ bacos:['swa maak ons nog een paar bacos, beetje cola voor de kleur'],
+ schoenen:['ik heb schoenen meegenomen die jou prima gaan passen!'],
+ dos:['dooosssssssss kabes!!'],
+ pas:['tik tik, ik heb niks hoor!','ik pas, spelen jullie maar lekker door'],
+ wij:['beginnersgeluk, dat is het!','dat was een ongelukje, hoor'],
+ zij:['zo, die staat!','dat noem ik nou domino']
+};
+const WHO=['Zuid','West','Noord (maat)','Oost'];
+const opp=()=>[1,3][Math.random()*2|0],ai1=()=>[1,2,3][Math.random()*3|0];
+// o.p = kans, o.big = groot wolkje, o.cd=false = wachttijd negeren, o.force = altijd tonen
+function say(seat,key,o={}){
+  const now=Date.now(),act=bub&&now<bub.until,p=o.p===undefined?1:o.p;
+  if(!G||(!o.force&&(act||(o.cd!==false&&now-lastBub<9000)||Math.random()>p)))return false;
+  const t=BUB[key],b={seat,text:t[Math.random()*t.length|0],until:now+(o.big?4300:3700),big:!!o.big,shown:false,out:false};
+  bub=b;lastBub=now;
+  setTimeout(()=>{if(bub===b){b.out=true;if(G)render()}},b.until-now-500);
+  setTimeout(()=>{if(bub===b){bub=null;if(G)render()}},b.until-now);
+  return true;
+}
+function bubHTML(){
+  if(!bub||Date.now()>bub.until)return'';
+  const b=bub,c=`bub b${b.seat}${b.big?' big':''}${b.shown?'':' pop'}${b.out?' out':''}`;b.shown=true;
+  return`<div class="abs ${c}"><small>${WHO[b.seat]}</small>${esc(b.text)}</div>`;
+}
+// Als jij lang over je zet doet, tikt een tegenspeler je aan
+function idleTimers(){
+  clearTimeout(idle1);clearTimeout(idle2);
+  const t=tok,n=G.hist.length,still=()=>t===tok&&G&&!G.over&&G.turn===0&&G.hist.length===n&&!info&&!ovl;
+  idle1=setTimeout(()=>{if(still()&&say(S.ccw?1:3,'beurt',{cd:false}))render()},7000);
+  idle2=setTimeout(()=>{if(still()&&say(opp(),'seinen',{cd:false}))render()},16000);
+}
 function step(){
   render();
   clearTimeout(tm);
+  clearTimeout(idle1);clearTimeout(idle2);
+  if(G.turn===0&&!G.over&&!info)idleTimers();
   if(G.over||G.turn===0||info)return;
   const t=tok;
   tm=setTimeout(()=>{if(t===tok&&G&&!G.over&&G.turn)ai()},900);
@@ -341,7 +397,7 @@ function advance(){G.turn=(G.turn+(S.ccw?3:1))%4;step()}
 function doPass(t){
   const c=G.chain;
   G.passed[t].add(c[0].a);G.passed[t].add(c[c.length-1].b);
-  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});
+  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});if(t)say(t,'pas',{p:.25});
   G.passes>=4?finish(null):advance();
 }
 function pick(i){
@@ -354,8 +410,8 @@ function pick(i){
   G.sel=i;render();
 }
 function put(side){if(G.sel!==null)play(G.sel,side)}
-function play(i,side){G.sel=null;place(0,i,side);after(0)}
-function tik(){if(G.turn||G.over||moves(0).length)return;doPass(0)}
+function play(i,side){G.sel=null;const dbl=G.hands[0][i].a===G.hands[0][i].b;place(0,i,side);if(dbl)say(opp(),'knokkels',{p:.5});after(0)}
+function tik(){if(G.turn||G.over||moves(0).length)return;say(opp(),'schoenen',{p:.7});doPass(0)}
 function finish(seat){
   let team,note,blk=null;
   if(seat!==null){team=seat%2;note=`${seat?SHORT[seat]+' heeft':'Jij hebt'} geen stenen meer.`}
@@ -370,6 +426,7 @@ function finish(seat){
   if(team===0){rw++;C.pw++}else if(team===1){rl++;C.pl++}
   const need=Math.ceil(S.bestOf/2);let career=null;
   if(wins.some(w=>w>=need))career=endMatch(wins[0]>=need);else save();
+  if(dos)say(seat,'dos',{force:true,big:true});else if(team===0)say(opp(),'wij',{p:.4});else if(team===1)say(opp(),'zij',{p:.4});
   G.over={team,note,seat,dos,blk,career};render();
 }
 // Slang: twee armen vanaf de eerste steen; rechts loopt naar beneden, links naar boven.
@@ -525,7 +582,7 @@ ${seat(1)}${seat(2)}${seat(3)}
 <div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
 <div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
-${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${infoHTML()}${lvInfoHTML()}${ovlHTML()}`;
+${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${bubHTML()}${infoHTML()}${lvInfoHTML()}${ovlHTML()}`;
   smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
