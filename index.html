@@ -50,35 +50,8 @@ h2{margin:0 0 6px}
 .note .lnk{display:inline;padding:0 4px;font-size:12.5px}
 .naam{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
 .stat{font-size:12.5px;opacity:.85}
-.ovl{inset:0;background:#000b;z-index:8;display:grid;place-items:center;overflow:hidden}
-.ovl .card{position:relative;z-index:1}
-.lvcard{width:540px;text-align:center}
-.lvcard p{margin:3px 0}
-.lvcard .conv{font-size:14px}
-.lvcard .sm{font-size:12px;opacity:.85}
-.lvcard .go{margin-top:8px}
-.lvbadge{width:74px;height:74px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-size:40px;font-weight:800;color:#2a1d00;background:radial-gradient(circle at 35% 30%,#ffe9a6,var(--brass));box-shadow:0 0 0 5px #fff8,0 8px 18px #0006}
-.up .lvbadge{animation:lvup 1s cubic-bezier(.2,.9,.3,1.3) both}
-.down .lvbadge{background:radial-gradient(circle at 35% 30%,#ffd1c7,#ef8d78);animation:lvdown .9s ease-out both}
-.stay .lvbadge{background:radial-gradient(circle at 35% 30%,#d9e6dd,#9db8a8)}
-@keyframes lvup{from{transform:translateY(130px) scale(.3);opacity:0}to{transform:none;opacity:1}}
-@keyframes lvdown{0%{transform:translateY(-130px) scale(1.2);opacity:0}60%{transform:translateY(8px) rotate(-6deg);opacity:1}80%{transform:translateY(-3px) rotate(4deg)}100%{transform:none}}
-.lvcard h2{font-size:26px;margin:2px 0}
-.lvcard .big{font-size:16px;font-weight:700;margin-top:6px}
-.sp{font-size:24px;letter-spacing:6px;margin:4px 0}
-.cert{width:770px;max-height:366px;overflow:auto;text-align:center;border:6px double #b8923c;background:linear-gradient(#fffdf4,#f6edd2);color:#3b2d12;font-family:Georgia,"Times New Roman",serif;padding:12px 22px}
-.cert h2{font-size:34px;margin:0;color:#9a6f10}
-.csub{font-size:13px;letter-spacing:.16em;color:#8a6d1f}
-.cert p{margin:3px 0;font-size:13px}
-.cert .who{font-size:28px;font-style:italic;margin:0 0 2px}
-.cert .dt{font-size:12px;opacity:.8}
-.cert .cap{font-size:11px;opacity:.75;margin-top:4px}
-.cert .go{width:auto;padding:8px 26px;font-family:system-ui,sans-serif;font-size:15px;margin-top:4px}
-.route{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;margin:6px 0}
-.rc{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px system-ui,sans-serif;color:#fff}
-.rc.rcw{background:#2c7a4f}
-.rc.rcl{background:#c8553f}
-.seal{font-size:30px;margin-left:6px}
+.lvn{font-size:12.5px;font-weight:700;margin:0 0 2px}
+.ctl .go{padding:8px;font-size:15px;margin-top:4px}
 .seg{display:flex;gap:6px;margin:4px 0 10px}
 .seg button{flex:1;padding:8px;border:1px solid var(--line);border-radius:10px;background:transparent}
 .seg button.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
@@ -214,7 +187,8 @@ h2{margin:0 0 6px}
 @keyframes pop{0%{transform:translate(-50%,-50%) scale(.2) rotate(-12deg);opacity:0}15%{transform:translate(-50%,-50%) scale(1.15) rotate(-3deg);opacity:1}25%,80%{transform:translate(-50%,-50%) scale(1) rotate(-3deg);opacity:1}100%{transform:translate(-50%,-50%) scale(.9) rotate(-3deg);opacity:0}}
 .cf{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;animation:fall 3s linear both}
 @keyframes fall{to{transform:translateY(440px) rotate(540deg)}}
-.ctl h3{margin:0;font-size:20px}
+.ctl h3{margin:0;font-size:18px}
+.endc{background:#123c2ce6;border-radius:12px;padding:6px 10px 8px;right:10px;bottom:8px;width:250px}
 .dots{display:flex;gap:4px;align-items:center;margin:2px 0}
 .dots span{min-width:30px;font-size:15px;font-weight:700}
 .dots i{width:11px;height:11px;border-radius:50%;border:2px solid #fff9}
@@ -232,33 +206,32 @@ const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
 const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
 const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
-let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,tipOpen=false,tipLock=false,tipSent=0,hint=false;
+let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,tipOpen=false,tipLock=false,tipSent=0,hint=false,hmc=null;
 // Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
 const KEY='domino-loopbaan';
-const fresh=()=>({naam:'',niv:1,master:false,cert:null,pw:0,pl:0,mw:0,ml:0,ups:0,downs:0,hist:[]});
+const fresh=()=>({niv:1,master:false,pw:0,pl:0,mw:0,ml:0});
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY));return v&&v.niv?{...fresh(),...v}:fresh()}catch(e){return fresh()}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}}
 let C=load();
 const lvl=()=>C.master?LV.length:Math.min(LV.length,Math.max(1,C.niv));
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-// Uitslag van een wedstrijd: promoveren, degraderen of (op niveau 5) het Master-certificaat
+// Uitslag van een wedstrijd: promoveren, degraderen of (op het hoogste niveau) Master worden
 function endMatch(win){
   const from=C.niv;let to=from,kind;
   if(C.master)kind='meester';
   else if(from===1){if(win){to=2;kind='up'}else kind='stay'}
   else if(from<LV.length){if(win){to=from+1;kind='up'}else{to=from-1;kind='down'}}
   else if(win)kind='master';else{to=from-1;kind='down'}
-  C.mw+=win?1:0;C.ml+=win?0:1;if(kind==='up')C.ups++;if(kind==='down')C.downs++;
-  C.hist.push({van:from,w:win?1:0,pw:rw,pl:rl});
+  C.mw+=win?1:0;C.ml+=win?0:1;
   if(!C.master)C.niv=to;
-  if(kind==='master'){C.master=true;C.cert={naam:C.naam||'Speler',datum:Date.now(),hist:C.hist.slice(),mw:C.mw,ml:C.ml,pw:C.pw,pl:C.pl,ups:C.ups,downs:C.downs}}
+  if(kind==='master'){C.master=true;C.top=LV.length}
   save();return{kind,from,to,win};
 }
-function restart(){C={...fresh(),naam:C.naam,cert:C.cert};save();render()}
+function restart(){C=fresh();save();render()}
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
-function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;deal()}
-function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;render()}
+function start(){wins=[0,0];round=0;rw=0;rl=0;deal()}
+function reset(){G=null;tok++;wins=[0,0];round=0;lvi=false;render()}
 function deal(){
   tok++;round++;hint=false;
   const all=[];
@@ -314,16 +287,27 @@ const CONV={
 // Volgorde van effect (gemeten in simulaties); conventies zonder merkbaar effect zijn niet opgenomen.
 const ORDER=[6,5,4,2,16];
 // Per niveau: waar de computer op let, en de gemeten winkans in % (tegen het niveau eronder, tegen niveau 1).
-// Gemeten met 60.000 gesimuleerde rondes per vergelijking, computers aan beide kanten (ongeveer 0,5 procentpunt nauwkeurig).
+// Niveau 1 t/m 6: 60.000 gesimuleerde rondes per vergelijking (ongeveer 0,5 procentpunt nauwkeurig). Niveau 7 t/m 10: 3.000 tot 8.000 rondes (0,6 tot 0,9 procentpunt).
+// Computers aan beide kanten.
 const INFO=[
  ['Let op niets. Elke steen die past is even waarschijnlijk.',null,null],
  ['Eigen stenen, dubbels op tafel en passen van de speler na hem. Hij laat geen getal open waarvan die nog een dubbel kan hebben.',62,62],
  ['Zijn eigen stenen: een dubbel legt hij zo vroeg mogelijk, want die raak je later moeilijk kwijt.',53,66],
  ['De tafel: welke stenen zijn maat legde en welk getal hij daarmee open liet. Dat getal laat hij liever liggen.',52,67],
  ['Zijn eigen stenen: hij telt per getal wat hij heeft en laat zijn sterkste getal liever op een uiteinde komen of blijven.',51,67],
- ['Zijn eigen stenen en de tafel: hij telt per getal hoeveel stenen gespeeld zijn en laat getallen open waar bijna alles van weg is.',52,67]
+ ['Zijn eigen stenen en de tafel: hij telt per getal hoeveel stenen gespeeld zijn en laat getallen open waar bijna alles van weg is.',52,67],
+ ['Hij rekent: de stenen die hij niet ziet trekt hij 40 keer willekeurig over de anderen (wie paste, kan geen steen van dat getal hebben), speelt elke zet in alle verdelingen uit en kiest de zet met de beste winstkans.',56,73],
+ ['Hij leest mee. Legde iemand een steen niet terwijl de conventies dat wel vragen, dan weegt hij de verdelingen waarin die speler hem toch had minder zwaar. Dit rekent hij met 100 verdelingen.',53,75],
+ ['Dezelfde manier van rekenen met 400 verdelingen: de kansen worden nauwkeuriger.',55,78],
+ ['Dezelfde manier van rekenen met 1500 verdelingen: een zeer scherpe schatting van de kansen.',52,79]
 ];
-const LV=[['Willekeurig','Legt een willekeurige steen die past, aan een willekeurige kant.'],...ORDER.map(k=>CONV[k])];
+const LV=[['Willekeurig','Legt een willekeurige steen die past, aan een willekeurige kant.'],...ORDER.map(k=>CONV[k]),
+ ['Kansen schatten','Telt de stenen die hij niet ziet en rekent 40 mogelijke verdelingen door. Hij kiest de zet waarmee zijn team het vaakst wint.'],
+ ['Meelezen','Rekent 100 verdelingen door en leest mee: wie een steen niet legde terwijl dat logisch was, heeft die waarschijnlijk niet.'],
+ ['Grondig rekenen','Rekent 400 verdelingen door, dus een scherpere schatting van de kansen.'],
+ ['Grootmeester','Rekent 1500 verdelingen door. Hij kijkt nog steeds nooit in jouw stenen.']];
+// Wie vóór de nieuwe niveaus Master werd, speelt verder op het oude hoogste niveau en kan nu verder klimmen
+if(C.master&&C.top!==LV.length){C.master=false;save()}
 // Waar de maat naartoe speelt: af te lezen aan de stenen die hij legde (het getal dat hij open liet)
 function favNums(seat){
   const c=G.chain,ai=c.indexOf(G.anchor),f=[0,0,0,0,0,0,0];
@@ -360,12 +344,190 @@ function evalMoves(seat,on){
     return{m,s,es,en,endVal,parts,sc:parts.reduce((n,x)=>n+x.v,0),f:{strong,favE,entry,pPass,oPass,gap:es.filter(e=>7-used(e)<=2),skipDbl:dblOpt&&s.a!==s.b&&!!en,dbl:s.a===s.b,P,N}};
   });
 }
+// Rekenende niveaus 7 t/m 10: aantal doorgerekende verdelingen, en of hij meeleest uit de zetten van de anderen
+const MCL=[{mc:40,read:false},{mc:100},{mc:400},{mc:1500}];
 function aiMove(seat,lv=lvl(),set=null){
+  const cfg=set&&set.mc?set:!set&&lv>ORDER.length+1?{...MCL[lv-ORDER.length-2],ms:700}:null;
+  if(cfg&&S.max===6)return mcMove(seat,cfg.mc,cfg);
   const on=set||ORDER.slice(0,lv-1);
   if(!on.length){const ms=moves(seat);return ms[Math.random()*ms.length|0]}
   let best=null,bs=-1e9;
   for(const o of evalMoves(seat,on)){const sc=o.sc+Math.random()*.5;if(sc>bs){bs=sc;best=o.m}}
   return best;
+}
+// ===== Rekenende computer (niveau 7 en hoger) =====
+// Hij kijkt niet in andermans hand, maar rekent. Hij trekt veel mogelijke verdelingen van de stenen die hij niet ziet
+// (met inachtneming van wie waarop gepast heeft en wat de zetten van de anderen verraden), speelt elke mogelijke zet
+// in al die verdelingen uit en kiest de zet waarmee zijn team het vaakst wint. Stenen zijn bitjes: 28 stenen passen in één getal.
+const SA=new Int8Array(28),SB=new Int8Array(28),PIP=new Int8Array(28),NMK=new Int32Array(7),DBI=new Int8Array(7),SID=[];
+(()=>{let k=0;for(let a=0;a<7;a++)for(let b=a;b<7;b++){SA[k]=a;SB[k]=b;PIP[k]=a+b;SID[a*7+b]=SID[b*7+a]=k;NMK[a]|=1<<k;NMK[b]|=1<<k;if(a===b)DBI[a]=k;k++}})();
+const ALL=(1<<28)-1,lo=m=>31-Math.clz32(m&-m);
+const pc=x=>{x-=(x>>>1)&0x55555555;x=(x&0x33333333)+((x>>>2)&0x33333333);x=(x+(x>>>4))&0x0f0f0f0f;return Math.imul(x,0x01010101)>>>24};
+const hm=a=>a.reduce((m,t)=>m|1<<SID[t.a*7+t.b],0);
+const RH=new Int32Array(4),RP=new Int32Array(4),RF=new Int8Array(28),RCN=new Int8Array(7),RUK=new Int8Array(7),CI=new Int8Array(64),CD=new Int8Array(64),CS=new Float64Array(64);
+let RS=2463534242,NOISE=.5,EPS=.3;
+const rnd=()=>{RS^=RS<<13;RS^=RS>>>17;RS^=RS<<5;return(RS>>>0)/4294967296};
+// Dicht: wie de minste stippen heeft wint voor zijn team; bij gelijk tussen de teams telt het teamtotaal
+function blockVal(tm){
+  const ps=[0,0,0,0];let mn=99;
+  for(let p=0;p<4;p++){let s=0;for(let m=RH[p];m;m&=m-1)s+=PIP[lo(m)];ps[p]=s;if(s<mn)mn=s}
+  let t0=0,t1=0;for(let p=0;p<4;p++)if(ps[p]===mn){if(p&1)t1=1;else t0=1}
+  if(t0!==t1)return(t0?0:1)===tm?1:0;
+  const a=ps[0]+ps[2],b=ps[1]+ps[3];return a===b?.5:((a<b?0:1)===tm?1:0);
+}
+// De snelle spelstijl is niveau 6: geen entree voor een dubbel (12), dubbels vroeg (11), naar je maat toe (10), sterkste getal (9), gat in de tafel (8).
+// Vult CI/CD/CS (steen, kant 0=links 1=rechts, punten) en geeft het aantal mogelijke zetten terug.
+// pn: getallen waarop de speler na hem paste. fv/fo: waar de maat van de speler naartoe speelt (7 getallen vanaf fo).
+function polScores(h,l,r,lg,played,pn,fv,fo){
+  const cn=RCN,uk=RUK;let nc=0,m=lg;
+  for(;m;m&=m-1){const id=lo(m),a=SA[id],b=SB[id];nc+=((a===l||b===l)?1:0)+((l!==r&&(a===r||b===r))?1:0)}
+  if(nc===1){const id=lo(lg);CI[0]=id;CD[0]=(SA[id]===l||SB[id]===l)?0:1;CS[0]=0;return 1}
+  const seen=played|h,unk=ALL&~seen;let top=0;
+  for(let n=0;n<7;n++){cn[n]=pc(h&NMK[n]);uk[n]=pc(NMK[n]&unk);if(fv[fo+n]>top)top=fv[fo+n]}
+  let k=0;
+  for(m=lg;m;m&=m-1){
+    const id=lo(m),a=SA[id],b=SB[id];
+    for(let sd=0;sd<2;sd++){
+      let e1,e2;
+      if(sd===0){if(a!==l&&b!==l)continue;e1=a===l?b:a;e2=r}else{if(l===r||(a!==r&&b!==r))continue;e1=l;e2=a===r?b:a}
+      let sc=0;
+      if(!((seen>>>DBI[e1])&1)&&!((pn>>e1)&1))sc-=12;
+      if(!((seen>>>DBI[e2])&1)&&!((pn>>e2)&1))sc-=12;
+      if(a===b)sc+=11;
+      if(top>0){if(fv[fo+e1]===top)sc+=10;if(fv[fo+e2]===top)sc+=10}
+      let mx=0;for(let n=0;n<7;n++){let c=cn[n];if(n===a||n===b)c--;if(c>mx)mx=c}
+      if(mx>=2){const c1=cn[e1]-((e1===a||e1===b)?1:0),c2=cn[e2]-((e2===a||e2===b)?1:0);if(c1===mx)sc+=9;if(c2===mx)sc+=9}
+      sc+=(8/7)*((7-uk[e1])+(7-uk[e2]));
+      CI[k]=id;CD[k]=sd;CS[k]=sc;k++;
+    }
+  }
+  return k;
+}
+function polPick(h,l,r,lg,played,pn,fv,fo){
+  const k=polScores(h,l,r,lg,played,pn,fv,fo);
+  if(k===1)return CI[0]*2+CD[0];
+  let bs=-1e9,b=0;for(let i=0;i<k;i++){const sc=CS[i]+(NOISE?rnd()*NOISE:0);if(sc>bs){bs=sc;b=i}}
+  return CI[b]*2+CD[b];
+}
+// Speelt de ronde uit met die spelstijl. Geeft 1 (winst), .5 (gelijk) of 0 voor team tm. RH, RP en RF bevatten de stand.
+function roll(l,r,turn,passes,played,tm,dir,pol){
+  const H=RH,PN=RP,F=RF;
+  for(;;){
+    const p=turn,h=H[p],lg=h&(NMK[l]|NMK[r]);
+    if(!lg){PN[p]|=(1<<l)|(1<<r);if(++passes>=4)return blockVal(tm);turn=(turn+dir)&3;continue}
+    let bi=-1,bsd=0;
+    if(pol===0){ // willekeurig: elke combinatie van steen en kant even waarschijnlijk
+      let nc=0,m=lg;for(;m;m&=m-1){const id=lo(m),a=SA[id],b=SB[id];nc+=((a===l||b===l)?1:0)+((a===r||b===r)?1:0)}
+      let x=(rnd()*nc)|0;
+      for(m=lg;m;m&=m-1){const id=lo(m),a=SA[id],b=SB[id];
+        if(a===l||b===l){if(x===0){bi=id;bsd=0;break}x--}
+        if(a===r||b===r){if(x===0){bi=id;bsd=1;break}x--}}
+    }else{const q=polPick(h,l,r,lg,played,PN[(p+dir)&3],F,((p+2)&3)*7);bi=q>>1;bsd=q&1}
+    const bit=1<<bi,a=SA[bi];
+    H[p]=h^bit;played|=bit;
+    if(bsd===0)l=a===l?SB[bi]:a;else r=a===r?SB[bi]:a;
+    if(!H[p])return(p&1)===tm?1:0;
+    F[p*7+(bsd===0?l:r)]++;
+    passes=0;turn=(turn+dir)&3;
+  }
+}
+// Trekt n mogelijke verdelingen van de onzichtbare stenen over de drie andere spelers (3 getallen per verdeling: hun stenen als bitjes)
+function sampleWorlds(seat,n){
+  const o=[(seat+1)&3,(seat+2)&3,(seat+3)&3],cap0=o.map(p=>G.hands[p].length);
+  const pm=o.map(p=>{let m=0;G.passed[p].forEach(x=>m|=NMK[x]);return m});   // stenen die hij niet kan hebben
+  const unk=ALL&~hm(G.hands[seat])&~hm(G.chain),ids=[];
+  for(let m=unk;m;m&=m-1)ids.push(lo(m));
+  const al=ids.map(id=>((pm[0]>>>id)&1?0:1)|((pm[1]>>>id)&1?0:2)|((pm[2]>>>id)&1?0:4));
+  const grp=[[],[],[]];ids.forEach((id,i)=>grp[pc(al[i])-1]&&grp[pc(al[i])-1].push(i));
+  const out=new Int32Array(n*3);
+  for(let w=0;w<n;w++){
+    let done=false;
+    for(let att=0;att<60&&!done;att++){
+      const cap=cap0.slice(),h=[0,0,0];let fail=false;
+      for(const g of grp){
+        for(let i=g.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[g[i],g[j]]=[g[j],g[i]]}
+        for(const i of g){
+          const a=al[i];let tot=0;for(let j=0;j<3;j++)if((a>>j)&1)tot+=cap[j];
+          if(!tot){fail=true;break}
+          let x=Math.random()*tot,pj=0;for(let j=0;j<3;j++)if((a>>j)&1){if(x<cap[j]){pj=j;break}x-=cap[j]}
+          cap[pj]--;h[pj]|=1<<ids[i];
+        }
+        if(fail)break;
+      }
+      if(!fail){out[w*3]=h[0];out[w*3+1]=h[1];out[w*3+2]=h[2];done=true}
+    }
+    if(!done){ // noodgreep: negeer de beperkingen
+      const sh=ids.slice();for(let i=sh.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[sh[i],sh[j]]=[sh[j],sh[i]]}
+      let q=0;for(let j=0;j<3;j++){let m=0;for(let k=0;k<cap0[j];k++)m|=1<<sh[q++];out[w*3+j]=m}
+    }
+  }
+  return out;
+}
+// Loopt de ronde tot nu na: waar wijzen de maten naartoe, en bij elke zet van een ander: wat kon hij kiezen (hangt af van zijn onbekende hand)
+function readRound(seat){
+  const c=G.chain,ai=c.indexOf(G.anchor),fav=new Int8Array(28),evs=[],byP=[0,0,0,0],dir=S.ccw?3:1;
+  let l=-1,r=-1,played=0;const pn=[0,0,0,0];
+  for(const h of G.hist){
+    const p=h.seat;
+    if(!h.o){pn[p]|=(1<<l)|(1<<r);continue}
+    const o=h.o,id=SID[o.a*7+o.b],ci=c.indexOf(o),first=o===G.anchor,sd=first?2:ci<ai?0:1;
+    if(!first&&p!==seat)evs.push({p,id,sd:l===r?0:sd,l,r,played,pn:pn[(p+dir)&3],fv:fav.slice(((p+2)&3)*7,((p+2)&3)*7+7),suf:0,k:evs.length});
+    if(first){l=o.a;r=o.b;if(o.a===o.b)fav[p*7+o.a]+=2;else{fav[p*7+o.a]++;fav[p*7+o.b]++}}
+    else if(sd===0){l=o.a;fav[p*7+l]++}else{r=o.b;fav[p*7+r]++}
+    played|=1<<id;h.id=id;h.pl=p;
+  }
+  // welke stenen een speler vanaf elke zet nog legde (die zaten toen nog in zijn hand)
+  const suf=[0,0,0,0],sufAt=new Array(G.hist.length);
+  for(let i=G.hist.length-1;i>=0;i--){const h=G.hist[i];if(h.o)suf[h.seat]|=1<<h.id;sufAt[i]=suf.slice()}
+  let ei=0;G.hist.forEach((h,i)=>{if(h.o&&h.o!==G.anchor&&h.seat!==seat){evs[ei++].suf=sufAt[i][h.seat]}});
+  return{fav,evs};
+}
+// Hoe waarschijnlijk is het dat deze speler, met deze hand, de zet deed die hij deed? Zijn de zetten onverwacht, dan weegt die verdeling minder mee.
+function worldWeight(evs,W,w,seat){
+  let wt=1;
+  for(const e of evs){
+    const hand=W[w*3+((e.p-seat-1)&3)]|e.suf,l=e.l,r=e.r,lg=hand&(NMK[l]|NMK[r]);
+    const k=polScores(hand,l,r,lg,e.played,e.pn,e.fv,0);
+    if(k<2)continue;
+    let best=-1e9,obs=-1e9;for(let i=0;i<k;i++){if(CS[i]>best)best=CS[i];if(CI[i]===e.id&&CD[i]===e.sd)obs=CS[i]}
+    if(best-obs>NOISE+1e-9)wt*=EPS;
+  }
+  return wt;
+}
+// Geeft per mogelijke zet de kans op winst voor het team van deze speler (gelijkspel telt voor de helft)
+function mcEval(seat,n,opt={}){
+  const hand=G.hands[seat],c=G.chain,dir=S.ccw?3:1,tm=seat&1;
+  let ms=moves(seat);
+  if(ms.length<2)return ms.map(m=>({m,v:null}));
+  const first=!c.length,L=first?-1:c[0].a,R=first?-1:c[c.length-1].b;
+  if(!first&&L===R)ms=ms.filter(m=>m.side!=='R');
+  const mine=hm(hand),pl=hm(c),rd=readRound(seat),read=opt.read!==false&&n>=(opt.minRead||0);
+  const cand=ms.map(m=>{const s=hand[m.i],bit=1<<SID[s.a*7+s.b];let l=L,r=R;const f0=rd.fav.slice();
+    if(first){l=s.a;r=s.b;if(s.a===s.b)f0[seat*7+s.a]+=2;else{f0[seat*7+s.a]++;f0[seat*7+s.b]++}}
+    else if(m.side==='L'){l=s.a===L?s.b:s.a;f0[seat*7+l]++}else{r=s.a===R?s.b:s.a;f0[seat*7+r]++}
+    return{m,h:mine^bit,l,r,pl:pl|bit,f0}});
+  const W=sampleWorlds(seat,n),o=[(seat+1)&3,(seat+2)&3,(seat+3)&3],pn=[0,1,2,3].map(p=>{let m=0;G.passed[p].forEach(x=>m|=1<<x);return m});
+  const sum=new Float64Array(cand.length),t0=Date.now();let used=0,tw=0;
+  for(let w=0;w<n;w++){
+    const wt=read&&rd.evs.length?worldWeight(rd.evs,W,w,seat):1;
+    const sd=(Math.imul(w+1,2654435761)^0x9E3779B9)>>>0||1;
+    for(let k=0;k<cand.length;k++){
+      const cd=cand[k];
+      if(!cd.h){sum[k]+=wt;continue}
+      RH[seat]=cd.h;RH[o[0]]=W[w*3];RH[o[1]]=W[w*3+1];RH[o[2]]=W[w*3+2];
+      RP[0]=pn[0];RP[1]=pn[1];RP[2]=pn[2];RP[3]=pn[3];RF.set(cd.f0);RS=sd;
+      sum[k]+=wt*roll(cd.l,cd.r,(seat+dir)&3,0,cd.pl,tm,dir,opt.pol===undefined?1:opt.pol);
+    }
+    used++;tw+=wt;
+    if(opt.ms&&used>=8&&Date.now()-t0>opt.ms)break;
+  }
+  return cand.map((cd,k)=>({m:cd.m,v:sum[k]/tw}));
+}
+function mcMove(seat,n,opt){
+  const ev=mcEval(seat,n,opt);
+  if(!ev.length)return null;
+  let best=ev[0],bv=-1;for(const e of ev){const v=(e.v||0)+Math.random()*1e-6;if(v>bv){bv=v;best=e}}
+  return best.m;
 }
 function step(){
   render();
@@ -396,7 +558,7 @@ function pick(i){
   G.sel=i;render();
 }
 function put(side){if(G.sel!==null)play(G.sel,side)}
-function play(i,side){hint=false;G.sel=null;place(0,i,side);after(0)}
+function play(i,side){hint=false;hmc=null;G.sel=null;place(0,i,side);after(0)}
 function tik(){if(G.turn||G.over||moves(0).length)return;hint=false;doPass(0)}
 function finish(seat){
   let team,note,blk=null;
@@ -442,7 +604,7 @@ function smooth(ty,bf,n){
 }
 // Tips van spelers: gaan via Web3Forms per mail naar de maker. De sleutel is niet geheim en staat in de installeerbare versie.
 const TIP_KEY='56a39360-a6ea-4d1b-ab06-fc8da3a74b8b';
-const VER='v24';
+const VER='v25';
 function openTip(){info=false;lvi=false;rules=false;tipOpen=true;tipLock=false;render();tipLock=true}
 function closeTip(){tipOpen=false;tipLock=false;G?step():render()}
 function tipHTML(){
@@ -470,7 +632,7 @@ async function sendTip(){
   }catch(e){m.textContent='Versturen is niet gelukt. Controleer je internet en probeer het nog eens.';b.disabled=false}
 }
 // Tip: wat denken je maat en de tegenstanders bij elke keuze, en welke zet vindt de computer het beste
-function toggleHint(){hint=!hint;render()}
+function toggleHint(){hint=!hint;hmc=null;if(hint&&G&&G.turn===0&&!G.over&&S.max===6){try{hmc=mcEval(0,1500,{ms:1200})}catch(e){hmc=null}}render()}
 const sideTxt=o=>o.m.side==='c'?'als eerste steen':`${o.m.side==='L'?'links':'rechts'}, op de ${o.endVal}`;
 function maatLine(o){
   const f=o.f;
@@ -496,12 +658,12 @@ function bestKey(a,b){let bk=0,bv=0;const g=(o,k)=>{const x=o.parts.find(z=>z.k=
   for(const k of new Set([...a.parts,...b.parts].map(x=>x.k))){const d=g(a,k)-g(b,k);if(d>bv){bv=d;bk=k}}return bk}
 function hintHTML(ev){
   if(!hint||ev.length<2)return'';
-  const top=ev.slice(0,3),gl=ev[0].sc-ev[1].sc<0.8;
-  const why=gl?'Het verschil is klein: kies wat jou past.':'Beste zet: '+(WHY[bestKey(ev[0],ev[1])]||'volgens de computer')+'.';
+  const top=ev.slice(0,3),mc=top[0].p!=null,gl=mc?ev[0].p-ev[1].p<.03:ev[0].sc-ev[1].sc<.8,pct=o=>Math.round(o.p*100)+'%';
+  const why=gl?'Het verschil is klein: kies wat jou past.':mc?`Beste zet: ${pct(ev[0])} kans op winst, de volgende ${pct(ev[1])}.`:'Beste zet: '+(WHY[bestKey(ev[0],ev[1])]||'volgens de computer')+'.';
   return`<div class="abs hint"><div class="hhd"><b>💡 Wat denkt wie?</b><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
-${top.map((o,i)=>`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>daarna open: ${o.es.join(' · ')}</em></div>
+${top.map((o,i)=>`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>open: ${o.es.join(' · ')}${mc?` · <b>${pct(o)}</b> winst`:''}</em></div>
 <div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class="hl"><b>Tegenpartij:</b><span>${tegenLine(o)}</span></div></div>`).join('')}
-<div class="hwhy">${ev.length>3?`En nog ${ev.length-3} andere ${ev.length===4?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
+<div class="hwhy">${ev.length>3?`En nog ${ev.length-3} andere ${ev.length===4?'zet':'zetten'}. `:''}${why} (advies van de computer${mc?', 1500 doorgerekende verdelingen':''})</div></div>`;
 }
 function toggleLvInfo(){lvi=!lvi;render()}
 function lvInfoHTML(){
@@ -534,7 +696,7 @@ ${S.dos?'<li><b>Dos cabes:</b> kon je met je laatste steen aan beide kanten aanl
 function infoHTML(){
   if(!info)return'';
   return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleInfo()"></div><div class="abs card infop"><h2>Niveaus en promotie</h2>
-<p>Je begint op niveau 1, waar de computer willekeurig speelt. Win je een wedstrijd, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau terug (op niveau 1 blijf je). Wie op niveau ${LV.length} wint, krijgt het Master-certificaat in Domino. West, Oost en je maat Noord spelen alle drie op jouw niveau. Een hoger niveau doet alles van de lagere niveaus en voegt een conventie toe. Bij een conflict wint de conventie van het lagere niveau. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste.</p>
+<p>Je begint op niveau 1, waar de computer willekeurig speelt. Win je een wedstrijd, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau terug (op niveau 1 blijf je). Wie op niveau ${LV.length} wint, is Master in Domino. West, Oost en je maat Noord spelen alle drie op jouw niveau. Niveau 2 tot en met 6 voegen elk een conventie toe; bij een conflict wint die van het lagere niveau. Vanaf niveau 7 rekent de computer kansen uit. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste, nooit in andermans hand.</p>
 <ol>${LV.map(([n,d],i)=>`<li${i+1===lvl()?' class="now"':''}><b>${n}:</b> ${d}</li>`).join('')}</ol>
 <div class="tipbtn"><button class="go" onclick="toggleInfo()">Sluiten</button><button class="lnk" onclick="toggleInfo();openTip()">💡 Tip insturen</button></div></div>`;
 }
@@ -546,39 +708,18 @@ function setup(){
   return`<div class="abs card setup"><h1>Domino</h1><p>Jij en Noord tegen West en Oost</p>
 <div class="cols"><div><b>Aantal spellen</b>${seg('bestOf',[[5,'Best of 5'],[9,'Best of 9'],[19,'Best of 19']])}
 <b>Speelrichting</b>${seg('ccw',[[false,'Met de klok mee'],[true,'Tegen de klok in']])}</div>
-<div class="rcol"><b>Jouw naam</b><input class="naam" type="text" maxlength="24" placeholder="Voor het certificaat" value="${esc(C.naam)}" oninput="C.naam=this.value;save()" aria-label="Jouw naam">
+<div class="rcol"><b>Jouw niveau</b><div class="stat"><b>${lvl()}. ${LV[lvl()-1][0]}${M?' (Master)':''}</b></div>
 ${C.pw+C.pl>0?`<div class="stat">Potjes: ${C.pw} gewonnen · ${C.pl} verloren</div>`:''}</div></div>
 <div class="row"><label class="chk"><input type="checkbox" ${S.dos?'checked':''} onchange="S.dos=this.checked"> Met dos cabes (dubbele punten)</label>
-<span>${C.cert?'<button class="lnk" onclick="showCert()">🏆 Certificaat</button> ':''}${M?'<button class="lnk" onclick="restart()">Nieuw traject</button> ':''}<button class="lnk" onclick="openTip()">💡 Tip insturen</button> <button class="lnk" onclick="toggleRules()">Spelregels</button></span></div>
-<button class="go" onclick="start()">Start</button></div><button class="abs quit" onclick="toggleInfo()" aria-label="Uitleg">i</button>${infoHTML()}${rulesHTML()}${lvInfoHTML()}${tipHTML()}${ovlHTML()}`;
+<span>${M?'<button class="lnk" onclick="restart()">Nieuw traject</button> ':''}<button class="lnk" onclick="openTip()">💡 Tip insturen</button> <button class="lnk" onclick="toggleRules()">Spelregels</button></span></div>
+<button class="go" onclick="start()">Start</button></div><button class="abs quit" onclick="toggleInfo()" aria-label="Uitleg">i</button>${infoHTML()}${rulesHTML()}${lvInfoHTML()}${tipHTML()}`;
 }
 
-// Promotie, degradatie en certificaat
-function showCareer(){const r=G.over.career;ovl=r.kind==='master'?'cert':'career';render()}
-function showCert(){ovl='cert';render()}
-function closeOvl(){ovl=null;G?start():render()}
-const confetti=n=>Array.from({length:n},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'][i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('');
-function ovlHTML(){
-  if(!ovl)return'';
-  if(ovl==='cert'){
-    const c=C.cert;if(!c)return'';
-    const d=new Date(c.datum).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
-    return`<div class="abs ovl">${confetti(60)}<div class="card cert"><div class="csub">Certificaat</div><h2>Master in Domino</h2>
-<p>Dit certificaat is uitgereikt aan</p><div class="who">${esc(c.naam)}</div>
-<p>voor het verslaan van de computer op het hoogste niveau.</p>
-<div class="cap">Je route: elk rondje is een wedstrijd, het cijfer is het niveau (groen gewonnen, rood verloren)</div><div class="route">${c.hist.map(h=>`<span class="rc ${h.w?'rcw':'rcl'}">${h.van}</span>`).join('')}<span class="seal">🏆</span></div>
-<p><b>${c.hist.length}</b> wedstrijden: <b>${c.mw}</b> gewonnen, <b>${c.ml}</b> verloren · potjes: <b>${c.pw}</b> gewonnen, <b>${c.pl}</b> verloren · <b>${c.ups}</b> promoties, <b>${c.downs}</b> degradaties</p>
-<p class="dt">${d}</p><button class="go" onclick="closeOvl()">${G?'Volgende wedstrijd':'Sluiten'}</button></div></div>`;
-  }
-  const r=G&&G.over&&G.over.career;if(!r)return'';
-  const up=r.kind==='up',N=LV[r.to-1],low=t=>t[0].toLowerCase()+t.slice(1);
-  const head=up?'✨ Promotie! ✨':'Een stapje terug';
-  const txt=up?`Van niveau ${r.from} naar niveau ${r.to}.`:`Terug naar niveau ${r.to}. Oefening baart kunst!`;
-  const look=r.to>1?`<p class="sm">Hij let op: ${low(INFO[r.to-1][0].split('. ')[0].replace(/\.?$/,'.'))}</p>`:'';
-  return`<div class="abs ovl">${up?confetti(50):''}<div class="card lvcard ${up?'up':'down'}"><div class="lvbadge">${r.to}</div>
-<h2>${head}</h2><p>${txt}</p><p class="big">Niveau ${r.to}: ${N[0]}</p><p class="conv">Zo speelt de computer nu: ${low(N[1])}</p>${look}
-<button class="go" onclick="closeOvl()">Volgende wedstrijd</button></div></div>`;
-}
+// Wat er na een wedstrijd met je niveau gebeurt, in één regel
+const careerLine=()=>{const r=G.over&&G.over.career;if(!r)return'';
+  const nm=n=>`niveau ${n}: ${LV[n-1][0]}`;
+  return r.kind==='up'?`⬆ Promotie naar ${nm(r.to)}`:r.kind==='down'?`⬇ Terug naar ${nm(r.to)}`:r.kind==='stay'?`Je blijft op ${nm(1)}`:r.kind==='master'?'🏆 Je bent Master in Domino!':'';
+};
 function render(){
   if(tipLock)return;
   const a=$('app');
@@ -586,7 +727,11 @@ function render(){
   const last=G.last;G.last=null;const lp=G.lastPass;G.lastPass=-1;
   const c=G.chain,need=Math.ceil(S.bestOf/2),done=wins.some(w=>w>=need);
   const mv=moves(0),ok=new Set(mv.map(m=>m.i)),mine=G.turn===0&&!G.over;
-  const ev=mine?evalMoves(0,ORDER).sort((x,y)=>y.sc-x.sc):[],canHint=ev.length>=2,best=hint&&canHint&&ev[0].sc-ev[1].sc>=0.8?ev[0]:null;
+  const dup=c.length&&c[0].a===c[c.length-1].b;
+  const ev=mine?evalMoves(0,ORDER).filter(o=>!(dup&&o.m.side==='R')):[];
+  if(hint&&hmc)for(const o of ev){const x=hmc.find(z=>z.m.i===o.m.i&&z.m.side===o.m.side);o.p=x?x.v:null}
+  ev.sort((x,y)=>x.p!=null&&y.p!=null?(y.p-x.p)||(y.sc-x.sc):y.sc-x.sc);
+  const canHint=ev.length>=2,best=hint&&canHint&&(ev[0].p!=null?ev[0].p-ev[1].p>=.03:ev[0].sc-ev[1].sc>=.8)?ev[0]:null;
   const sel=G.sel!==null?mv.filter(m=>m.i===G.sel).map(m=>m.side):[];
   const ghost=side=>({...orient(G.hands[0][G.sel],side),g:side});
   const ch=c.length?[...(sel.includes('L')?[ghost('L')]:[]),...c,...(sel.includes('R')?[ghost('R')]:[])]:[];
@@ -619,10 +764,9 @@ function render(){
   const sub=!G.over?'':done?`Stand: wij ${wins[0]} – ${wins[1]} zij${G.over.dos?' · dos cabes!':''}`:t===null?(bl?blkTxt+': geen punt':'Gelijk: niemand krijgt een punt'):sv===null?blkTxt:G.over.dos?`Dubbele punten voor ${t===0?'ons':'hen'}`:t===0?'Ronde voor ons':'Ronde voor hen';
   const dots=k=>`<div class="dots"><span>${k?'Zij':'Wij'}</span>${Array.from({length:need},(_,i)=>`<i class="${i<wins[k]?'on t'+k:''}"></i>`).join('')}</div>`;
   const showFx=G.over&&!G.fx;if(G.over)G.fx=true;
-  const nc=showFx&&t===0?(done?90:G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
+  const nc=showFx&&t===0?(G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
   const fx=showFx?`<div class="abs fx"><div class="abs rib ${t===0?'':t===null?'g':'l'}">${head}<small>${sub}</small></div>${Array.from({length:nc},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${CC[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('')}</div>`:'';
-  const cr=G.over&&G.over.career&&['up','down','master'].includes(G.over.career.kind);
-  const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl"><h3>${head}</h3><div>${sub}</div><button class="go" onclick="${done?(cr?'showCareer()':'start()'):'deal()'}">${done?(cr?'Verder':'Volgende wedstrijd'):'Volgende ronde'}</button></div>`:'';
+    const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl endc"><h3>${head}</h3><div>${sub}</div>${done?`<div class="lvn">${careerLine()}</div>`:''}<button class="go" onclick="${done?'start()':'deal()'}">${done?'Volgende wedstrijd':'Volgende ronde'}</button></div>`:'';
   a.innerHTML=`<div class="abs score">${dots(0)}${dots(1)}Best of ${S.bestOf} · ronde ${round} · niveau ${lvl()} <button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button> · ${S.ccw?'↺':'↻'}</div>
 <button class="abs quit" onclick="reset()" aria-label="Stoppen">✕</button>
 <button class="abs quit info" onclick="toggleInfo()" aria-label="Uitleg">i</button>
@@ -630,7 +774,7 @@ ${seat(1)}${seat(2)}${seat(3)}
 <div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
 <div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}${best&&best.m.i===i?' best':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
-${G.over?endp:`<div class="abs ctl"><div>${status}</div><div class="cbtn"><button class="hintb${canHint?' on':''}" onclick="toggleHint()" ${canHint?'':'disabled'} aria-label="Tip: wat denken je maat en de tegenstanders?">💡</button><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div></div>`}${fx}${hintHTML(ev)}${infoHTML()}${lvInfoHTML()}${tipHTML()}${ovlHTML()}`;
+${G.over?endp:`<div class="abs ctl"><div>${status}</div><div class="cbtn"><button class="hintb${canHint?' on':''}" onclick="toggleHint()" ${canHint?'':'disabled'} aria-label="Tip: wat denken je maat en de tegenstanders?">💡</button><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div></div>`}${fx}${hintHTML(ev)}${infoHTML()}${lvInfoHTML()}${tipHTML()}`;
   smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
