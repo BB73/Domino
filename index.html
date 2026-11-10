@@ -84,16 +84,16 @@ h2{margin:0 0 6px}
 .hintb.on{background:var(--brass);border-color:var(--brass);animation:hbp 1.6s infinite}
 .hintb:disabled{opacity:.35;cursor:default}
 @keyframes hbp{50%{box-shadow:0 0 0 6px #e0b04a55}}
-.hint{right:12px;top:44px;width:380px;z-index:4;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 10px;box-shadow:0 6px 16px #0006;font-size:11.5px;line-height:1.3}
+.hint{right:12px;top:38px;width:380px;z-index:4;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 10px;box-shadow:0 6px 16px #0006;font-size:11px;line-height:1.22;max-height:266px;overflow-y:auto}
 .hhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
 .hhd button{border:0;background:none;font-size:15px;padding:0 4px}
-.hrow{padding:4px 0;border-top:1px solid var(--line)}
+.hrow{padding:3px 0;border-top:1px solid var(--line)}
 .hrow.top{background:#e0b04a2e;border-radius:6px;padding:4px 6px}
 .hh{display:flex;align-items:center;gap:6px;font-weight:700}
 .hh em{font-weight:400;font-style:normal;opacity:.75;margin-left:auto}
 .hint .d.m{--s:13px}
 .hl{display:flex;gap:4px}
-.hl b{min-width:70px;font-weight:700}
+.hl b{min-width:78px;font-weight:700}
 .hwhy{margin-top:4px;opacity:.85;font-size:11px}
 .st{position:relative}
 .st.best::after{content:"⭐";position:absolute;top:-13px;right:-3px;font-size:15px}
@@ -180,7 +180,12 @@ h2{margin:0 0 6px}
 .pl.t1{background:#ef8d78}
 .pl.rc{outline:2px solid #fff}
 .pts{display:block;font-size:11px;opacity:.9}
-.mine{left:196px;bottom:12px;width:84px;text-align:center}
+.mine{left:100px;bottom:12px;width:182px;text-align:right}
+.mine.lift{bottom:34px}
+.mine .nm{white-space:nowrap}
+.rl{font-size:10px;font-weight:400;opacity:.85;margin-left:3px}
+.seat.w .nm{left:0;transform:none}
+.seat.e .nm{left:auto;right:0;transform:none}
 .fx{inset:0;pointer-events:none;z-index:7;overflow:hidden}
 .rib{left:50%;top:44%;padding:8px 34px 10px;border-radius:14px;font-size:38px;font-weight:800;line-height:1.1;text-align:center;white-space:nowrap;color:#2a1d00;background:var(--brass);box-shadow:0 8px 0 #0004;animation:pop 2.8s both}
 .rib.l{background:#ef8d78}
@@ -211,7 +216,7 @@ const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],F
 let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,tipOpen=false,tipLock=false,tipSent=0,hint=false,hmc=null;
 // Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
 const KEY='domino-loopbaan';
-const fresh=()=>({niv:1,pw:0,pl:0,mw:0,ml:0,tips:true,v:2});
+const fresh=()=>({niv:1,pw:0,pl:0,mw:0,ml:0,tips:true,v:3});
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY));return v&&v.niv?{...fresh(),...v}:fresh()}catch(e){return fresh()}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}}
 let C=load();
@@ -244,7 +249,7 @@ function deal(){
   const n=all.length/4;
   const hands=[0,1,2,3].map(k=>all.slice(k*n,k*n+n).sort((x,y)=>x.a-y.a||x.b-y.b));
   const st=hands.findIndex(h=>h.some(s=>s.a===S.max&&s.b===S.max));
-  G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],
+  G={hands,chain:[],turn:st,lead:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],
      note:`${st?SHORT[st]+' heeft':'Jij hebt'} de dubbel ${S.max} en begint`};
   step();
 }
@@ -287,13 +292,14 @@ const CONV={
  9:['Stenen tellen','Laat een getal open liggen waar niemand anders nog een steen van heeft.'],
  10:['Dubbel blokkeren','Laat op elk uiteinde een getal liggen dat een andere tegenstander mist.'],
  16:['Gat in de tafel','Laat liever getallen open waarvan bijna alle stenen al gespeeld zijn.'],
+ 23:['Spelen vanuit je rol','Weegt elke zet met gewichten die per rol (Leider, Verdediger, Partner, Breker) zijn uitgerekend: getallen die bijna op zijn, dubbels, flexibel blijven, zware stenen en dos cabes.'],
  17:['Uitkomen met de juiste dubbel','Als hij begint: de dubbel 6, behalve als hij geen andere zes heeft en een andere dubbel waarvan hij minstens twee stenen heeft. Dan opent hij met die dubbel.']
 };
 // Volgorde van effect (gemeten in simulaties); conventies zonder merkbaar effect zijn niet opgenomen.
 const ORDER=[6,5,4,2,16,17];
 // Per niveau: waar de computer op let, en de gemeten winkans in % (tegen het niveau eronder, tegen niveau 1).
-// Niveau 1 t/m 6: 60.000 gesimuleerde rondes per vergelijking (ongeveer 0,5 procentpunt nauwkeurig). Niveau 7: 200.000 rondes (0,2 procentpunt). Niveau 8 t/m 11: 3.000 tot 8.000 rondes (0,6 tot 0,9 procentpunt).
-// Computers aan beide kanten.
+// Niveau 1 t/m 6: 60.000 gesimuleerde rondes per vergelijking (ongeveer 0,5 procentpunt nauwkeurig). Niveau 7 en 8: 60.000 tot 200.000 rondes (0,2 procentpunt). Niveau 9 t/m 12: 3.000 tot 8.000 rondes (0,6 tot 0,9 procentpunt).
+// Computers aan beide kanten. De rekenende niveaus (9 t/m 12) rekenen om de kans op de wedstrijd; hier telt het aantal gewonnen rondes.
 const INFO=[
  ['Let op niets. Elke steen die past is even waarschijnlijk.',null,null],
  ['Eigen stenen, dubbels op tafel en passen van de speler na hem. Hij laat geen getal open waarvan die nog een dubbel kan hebben.',62,62],
@@ -302,18 +308,20 @@ const INFO=[
  ['Zijn eigen stenen: hij telt per getal wat hij heeft en laat zijn sterkste getal liever op een uiteinde komen of blijven.',51,67],
  ['Zijn eigen stenen en de tafel: hij telt per getal hoeveel stenen gespeeld zijn en laat getallen open waar bijna alles van weg is.',52,67],
  ['Zijn eigen stenen, als hij begint: de dubbel 6, behalve als hij geen andere zes heeft en een andere dubbel met minstens twee stenen van dat getal. Dan opent hij met die dubbel.',51,68],
- ['Hij rekent: de stenen die hij niet ziet trekt hij 40 keer willekeurig over de anderen (wie paste, kan geen steen van dat getal hebben), speelt elke zet in alle verdelingen uit en kiest de zet met de beste winstkans.',56,73],
- ['Hij leest mee. Legde iemand een steen niet terwijl de conventies dat wel vragen, dan weegt hij de verdelingen waarin die speler hem toch had minder zwaar. Dit rekent hij met 100 verdelingen.',53,75],
- ['Dezelfde manier van rekenen met 400 verdelingen: de kansen worden nauwkeuriger.',55,78],
- ['Dezelfde manier van rekenen met 1500 verdelingen: een zeer scherpe schatting van de kansen.',52,79]
+ ['Zijn eigen stenen, de tafel en zijn rol in de ronde. Hij weegt elke zet met gewichten die uit 100.000 doorgerekende keuzes komen: getallen die bijna op zijn (zwaarst), dubbels, flexibel blijven, zware stenen en dos cabes. Per rol zijn de gewichten iets anders.',51,69],
+ ['Hij rekent: de stenen die hij niet ziet trekt hij 40 keer willekeurig over de anderen (wie paste, kan geen steen van dat getal hebben), speelt elke zet in alle verdelingen uit en kiest de zet met de beste winstkans.',52,72],
+ ['Hij leest mee. Legde iemand een steen niet terwijl de conventies dat wel vragen, dan weegt hij de verdelingen waarin die speler hem toch had minder zwaar. Dit rekent hij met 100 verdelingen.',52,73],
+ ['Dezelfde manier van rekenen met 400 verdelingen: de kansen worden nauwkeuriger.',54,78],
+ ['Dezelfde manier van rekenen met 1500 verdelingen: een zeer scherpe schatting van de kansen.',51,77]
 ];
-const LV=[['Willekeurig','Legt een willekeurige steen die past, aan een willekeurige kant.'],...ORDER.map(k=>CONV[k]),
+const LV=[['Willekeurig','Legt een willekeurige steen die past, aan een willekeurige kant.'],...ORDER.map(k=>CONV[k]),CONV[23],
  ['Kansen schatten','Telt de stenen die hij niet ziet en rekent 40 mogelijke verdelingen door. Hij kiest de zet waarmee zijn team het vaakst wint.'],
  ['Meelezen','Rekent 100 verdelingen door en leest mee: wie een steen niet legde terwijl dat logisch was, heeft die waarschijnlijk niet.'],
  ['Grondig rekenen','Rekent 400 verdelingen door, dus een scherpere schatting van de kansen.'],
  ['Grootmeester','Rekent 1500 verdelingen door. Hij kijkt nog steeds nooit in jouw stenen.']];
-// Voortgang van vóór de conventie 'uitkomen': de rekenende niveaus (toen 7 t/m 10) zijn een plek opgeschoven
-if((C.v||1)<2){if(C.niv>=7)C.niv++;C.v=2;save()}
+// Voortgang van vóór nieuwe niveaus: de latere niveaus zijn een plek opgeschoven (v2: 'uitkomen' erbij, v3: 'spelen vanuit je rol' erbij)
+if((C.v||1)<2){if(C.niv>=7)C.niv++;C.v=2}
+if(C.v<3){if(C.niv>=8)C.niv++;C.v=3;save()}
 
 // Waar de maat naartoe speelt: af te lezen aan de stenen die hij legde (het getal dat hij open liet)
 function favNums(seat){
@@ -332,6 +340,16 @@ function openPick(hand){
   let best=null,bc=1;
   for(const t of hand)if(t.a===t.b&&t.a!==6){const c=cnt(t.a);if(c>bc||(c===bc&&best&&t.a>best.a)){best=t;bc=c}}
   return best||d6;
+}
+// Per zet de gegevens waarmee de gewichten van de rol-conventie rekenen (uit 100.000 doorgerekende keuzes)
+const RWR=[[-2.509, -1.487, 0.0, 0.026, 0.854, 0.309, 7.029, -0.098, -1.188, -0.093, 9.073, -3.296, 0.38, 1.986, 2.206, 2.309], [-2.331, -2.132, 1.497, -0.445, 0.238, 1.053, 3.954, -0.257, -0.49, -0.085, 8.994, -2.882, 0.41, 1.376, 3.454, 1.698], [-0.938, -0.504, 0.123, -1.106, 0.123, 1.589, 3.776, 0.02, -0.347, -0.504, 7.157, -2.71, 0.251, 1.401, 4.458, 1.83], [-2.375, -2.452, 0.169, 0.169, -0.322, 0.942, 2.962, -0.772, -0.216, -0.174, 10.318, -2.504, 0.25, 0.949, 4.732, 2.085]];
+function roleFeat(seat,o){
+  const hand=G.hands[seat],s=o.s,es=o.es,rest=hand.filter((_,j)=>j!==o.m.i),L=G.lead,N=o.f.N;
+  const fl=favNums(L),tp=Math.max(...fl),fav=tp>0?[0,1,2,3,4,5,6].filter(e=>fl[e]===tp):[];
+  const unk=e=>7-(G.chain.filter(c=>c.a===e||c.b===e).length+(s.a===e||s.b===e?1:0)+rest.filter(c=>c.a===e||c.b===e).length);
+  return[(o.en&&fav.includes(o.endVal))?1:0,es.filter(e=>fav.includes(e)).length,L!==seat?es.filter(e=>G.passed[L].has(e)).length:0,
+    es.filter(e=>G.passed[N].has(e)).length,o.f.pPass.length,o.f.oPass.length,s.a===s.b?1:0,o.f.entry.length,o.f.strong.length,o.f.favE.length,
+    es.reduce((n,e)=>n+(7-unk(e))/7,0),o.f.closes?1:0,s.a+s.b,rest.filter(c=>es.some(e=>c.a===e||c.b===e)).length,o.f.dosReady?1:0,es[0]===es[1]?1:0];
 }
 function evalMoves(seat,on){
   const ms=moves(seat),act=k=>on.includes(k),W=k=>12-on.indexOf(k);
@@ -358,15 +376,20 @@ function evalMoves(seat,on){
     add(10,((G.passed[O[0]].has(es[0])&&G.passed[O[1]].has(es[1]))||(G.passed[O[1]].has(es[0])&&G.passed[O[0]].has(es[1])))?W(10):0);
     add(16,es.reduce((n,e)=>n+used(e)/7,0)*W(16));
     add(17,pick17&&s===pick17?1000:0);
-    return{m,s,es,en,endVal,parts,sc:parts.reduce((n,x)=>n+x.v,0),f:{strong,favE,entry,pPass,oPass,gap:es.filter(e=>7-used(e)<=2),skipDbl:dblOpt&&s.a!==s.b&&!!en,dbl:s.a===s.b,P,N}};
+    const res={m,s,es,en,endVal,parts,sc:parts.reduce((n,x)=>n+x.v,0),f:{strong,favE,entry,pPass,oPass,gap:es.filter(e=>7-used(e)<=2),skipDbl:dblOpt&&s.a!==s.b&&!!en,
+      closes:rest.length>0&&es.every(e=>c.filter(t=>has(t,e)).length+(has(s,e)?1:0)===7),
+      dosNow:!!S.dos&&hand.length===1&&c.length>0&&(s.a===c[0].a||s.b===c[0].a)&&(s.a===c[c.length-1].b||s.b===c[c.length-1].b),
+      dosReady:!!S.dos&&hand.length===2&&rest.length===1&&(rest[0].a===es[0]||rest[0].b===es[0])&&(rest[0].a===es[1]||rest[0].b===es[1]),dbl:s.a===s.b,P,N}};
+    if(act(23)){const ft=roleFeat(seat,res),w=RWR[roleOf(seat)],v=ft.reduce((n,x,i)=>n+x*w[i],0);res.parts.push({k:23,v});res.sc+=v}
+    return res;
   });
 }
 // Rekenende niveaus 7 t/m 10: aantal doorgerekende verdelingen, en of hij meeleest uit de zetten van de anderen
 const MCL=[{mc:40,read:false},{mc:100},{mc:400},{mc:1500}];
 function aiMove(seat,lv=lvl(),set=null){
-  const cfg=set&&set.mc?set:!set&&lv>ORDER.length+1?{...MCL[lv-ORDER.length-2],ms:700}:null;
+  const cfg=set&&set.mc?set:!set&&lv>ORDER.length+2?{...MCL[lv-ORDER.length-3],ms:700}:null;
   if(cfg&&S.max===6)return mcMove(seat,cfg.mc,cfg);
-  const on=set||ORDER.slice(0,lv-1);
+  const on=set||(lv===ORDER.length+2?[17,23]:ORDER.slice(0,lv-1));   // niveau 8: gewichten per rol in plaats van de handgemaakte gewichten
   if(!on.length){const ms=moves(seat);return ms[Math.random()*ms.length|0]}
   let best=null,bs=-1e9;
   for(const o of evalMoves(seat,on)){const sc=o.sc+Math.random()*.5;if(sc>bs){bs=sc;best=o.m}}
@@ -382,15 +405,16 @@ const ALL=(1<<28)-1,lo=m=>31-Math.clz32(m&-m);
 const pc=x=>{x-=(x>>>1)&0x55555555;x=(x&0x33333333)+((x>>>2)&0x33333333);x=(x+(x>>>4))&0x0f0f0f0f;return Math.imul(x,0x01010101)>>>24};
 const hm=a=>a.reduce((m,t)=>m|1<<SID[t.a*7+t.b],0);
 const RH=new Int32Array(4),RP=new Int32Array(4),RF=new Int8Array(28),RCN=new Int8Array(7),RUK=new Int8Array(7),CI=new Int8Array(64),CD=new Int8Array(64),CS=new Float64Array(64);
-let RS=2463534242,NOISE=.5,EPS=.3;
+let RS=2463534242,NOISE=.5,EPS=.3,RLAST=0,RDOS=true;
 const rnd=()=>{RS^=RS<<13;RS^=RS>>>17;RS^=RS<<5;return(RS>>>0)/4294967296};
-// Dicht: wie de minste stippen heeft wint voor zijn team; bij gelijk tussen de teams telt het teamtotaal
+// Dicht: wie de minste stippen heeft wint voor zijn team; bij gelijk tussen de teams telt het teamtotaal. Geeft punten voor team tm: 1, -1 of 0.
 function blockVal(tm){
   const ps=[0,0,0,0];let mn=99;
   for(let p=0;p<4;p++){let s=0;for(let m=RH[p];m;m&=m-1)s+=PIP[lo(m)];ps[p]=s;if(s<mn)mn=s}
   let t0=0,t1=0;for(let p=0;p<4;p++)if(ps[p]===mn){if(p&1)t1=1;else t0=1}
-  if(t0!==t1)return(t0?0:1)===tm?1:0;
-  const a=ps[0]+ps[2],b=ps[1]+ps[3];return a===b?.5:((a<b?0:1)===tm?1:0);
+  RLAST=1;
+  if(t0!==t1)return(t0?0:1)===tm?1:-1;
+  const a=ps[0]+ps[2],b=ps[1]+ps[3];return a===b?0:((a<b?0:1)===tm?1:-1);
 }
 // De snelle spelstijl is niveau 6: geen entree voor een dubbel (12), dubbels vroeg (11), naar je maat toe (10), sterkste getal (9), gat in de tafel (8).
 // Vult CI/CD/CS (steen, kant 0=links 1=rechts, punten) en geeft het aantal mogelijke zetten terug.
@@ -426,7 +450,8 @@ function polPick(h,l,r,lg,played,pn,fv,fo){
   let bs=-1e9,b=0;for(let i=0;i<k;i++){const sc=CS[i]+(NOISE?rnd()*NOISE:0);if(sc>bs){bs=sc;b=i}}
   return CI[b]*2+CD[b];
 }
-// Speelt de ronde uit met die spelstijl. Geeft 1 (winst), .5 (gelijk) of 0 voor team tm. RH, RP en RF bevatten de stand.
+// Speelt de ronde uit met die spelstijl. Geeft de punten voor team tm: 1 of -1 (dos cabes: 2 of -2), 0 bij gelijk. RLAST: 0 uit, 1 dicht, 2 dos cabes.
+// RH, RP en RF bevatten de stand.
 function roll(l,r,turn,passes,played,tm,dir,pol){
   const H=RH,PN=RP,F=RF;
   for(;;){
@@ -441,9 +466,10 @@ function roll(l,r,turn,passes,played,tm,dir,pol){
         if(a===r||b===r){if(x===0){bi=id;bsd=1;break}x--}}
     }else{const q=polPick(h,l,r,lg,played,PN[(p+dir)&3],F,((p+2)&3)*7);bi=q>>1;bsd=q&1}
     const bit=1<<bi,a=SA[bi];
+    const dosNow=RDOS&&h===bit&&(a===l||SB[bi]===l)&&(a===r||SB[bi]===r);
     H[p]=h^bit;played|=bit;
     if(bsd===0)l=a===l?SB[bi]:a;else r=a===r?SB[bi]:a;
-    if(!H[p])return(p&1)===tm?1:0;
+    if(!H[p]){RLAST=dosNow?2:0;const w=(p&1)===tm?1:-1;return dosNow?2*w:w}
     F[p*7+(bsd===0?l:r)]++;
     passes=0;turn=(turn+dir)&3;
   }
@@ -511,8 +537,27 @@ function worldWeight(evs,W,w,seat){
   }
   return wt;
 }
-// Geeft per mogelijke zet de kans op winst voor het team van deze speler (gelijkspel telt voor de helft)
+// Kans dat je team de wedstrijd wint als je da punten nodig hebt en de tegenpartij db, met een vaste verdeling voor de rondes erna
+// (winst 1 punt .43, dos cabes .055, gelijk .03). Zo telt een dos cabes mee zolang die punten nog iets uitmaken.
+const MV=new Map();
+function matchV(da,db){
+  if(da<=0)return 1;if(db<=0)return 0;
+  const k=da*16+db;if(MV.has(k))return MV.get(k);
+  const v=(.43*matchV(da-1,db)+.055*matchV(da-2,db)+.43*matchV(da,db-1)+.055*matchV(da,db-2))/.97;
+  MV.set(k,v);return v;
+}
+// f: kansen op -2, -1, 0, 1, 2 punten voor deze zet. Ver van het einde van de wedstrijd (of zonder dos cabes) telt het om de verwachte punten.
+function matchObj(f,tm){
+  const need=Math.ceil(S.bestOf/2),da=need-wins[tm],db=need-wins[1-tm];
+  if(!S.dos)return f[3]+f[4]+.5*f[2];
+  if(da>9||db>9)return(f[4]*2+f[3]-f[1]-f[0]*2)*.1+.5;
+  return f[0]*matchV(da,db-2)+f[1]*matchV(da,db-1)+f[2]*matchV(da,db)+f[3]*matchV(da-1,db)+f[4]*matchV(da-2,db);
+}
+// Geeft per mogelijke zet: v = kans op winst voor het team van deze speler (gelijkspel telt voor de helft), p = verwachte punten
+// (dos cabes telt dubbel), m = kans op winst van de hele wedstrijd (dos cabes telt mee voor zover het uitmaakt), dos / dosTegen = kans op een
+// dos cabes van jouw team / van de tegenpartij, dicht = kans dat de ronde dichtzit.
 function mcEval(seat,n,opt={}){
+  RDOS=!!S.dos;
   const hand=G.hands[seat],c=G.chain,dir=S.ccw?3:1,tm=seat&1;
   let ms=moves(seat);
   if(ms.length<2)return ms.map(m=>({m,v:null}));
@@ -522,28 +567,33 @@ function mcEval(seat,n,opt={}){
   const cand=ms.map(m=>{const s=hand[m.i],bit=1<<SID[s.a*7+s.b];let l=L,r=R;const f0=rd.fav.slice();
     if(first){l=s.a;r=s.b;if(s.a===s.b)f0[seat*7+s.a]+=2;else{f0[seat*7+s.a]++;f0[seat*7+s.b]++}}
     else if(m.side==='L'){l=s.a===L?s.b:s.a;f0[seat*7+l]++}else{r=s.a===R?s.b:s.a;f0[seat*7+r]++}
-    return{m,h:mine^bit,l,r,pl:pl|bit,f0}});
+    const dosNow=RDOS&&!first&&mine===bit&&(s.a===L||s.b===L)&&(s.a===R||s.b===R);
+    return{m,h:mine^bit,l,r,pl:pl|bit,f0,dosNow}});
   const W=sampleWorlds(seat,n),o=[(seat+1)&3,(seat+2)&3,(seat+3)&3],pn=[0,1,2,3].map(p=>{let m=0;G.passed[p].forEach(x=>m|=1<<x);return m});
-  const sum=new Float64Array(cand.length),t0=Date.now();let used=0,tw=0;
+  const K=cand.length,cnt=new Float64Array(K*5),sum=new Float64Array(K),sumP=new Float64Array(K),sumD=new Float64Array(K),sumDA=new Float64Array(K),sumB=new Float64Array(K),t0=Date.now();let used=0,tw=0;
   for(let w=0;w<n;w++){
     const wt=read&&rd.evs.length?worldWeight(rd.evs,W,w,seat):1;
     const sd=(Math.imul(w+1,2654435761)^0x9E3779B9)>>>0||1;
     for(let k=0;k<cand.length;k++){
       const cd=cand[k];
-      if(!cd.h){sum[k]+=wt;continue}
+      if(!cd.h){const q=cd.dosNow?2:1;sum[k]+=wt;sumP[k]+=wt*q;cnt[k*5+2+q]+=wt;if(cd.dosNow)sumD[k]+=wt;continue}
       RH[seat]=cd.h;RH[o[0]]=W[w*3];RH[o[1]]=W[w*3+1];RH[o[2]]=W[w*3+2];
-      RP[0]=pn[0];RP[1]=pn[1];RP[2]=pn[2];RP[3]=pn[3];RF.set(cd.f0);RS=sd;
-      sum[k]+=wt*roll(cd.l,cd.r,(seat+dir)&3,0,cd.pl,tm,dir,opt.pol===undefined?1:opt.pol);
+      RP[0]=pn[0];RP[1]=pn[1];RP[2]=pn[2];RP[3]=pn[3];RF.set(cd.f0);RS=sd;RLAST=0;
+      const q=roll(cd.l,cd.r,(seat+dir)&3,0,cd.pl,tm,dir,opt.pol===undefined?1:opt.pol);
+      sum[k]+=wt*(q>0?1:q<0?0:.5);sumP[k]+=wt*q;cnt[k*5+2+q]+=wt;
+      if(q===2)sumD[k]+=wt;else if(q===-2)sumDA[k]+=wt;
+      if(RLAST===1)sumB[k]+=wt;
     }
     used++;tw+=wt;
     if(opt.ms&&used>=8&&Date.now()-t0>opt.ms)break;
   }
-  return cand.map((cd,k)=>({m:cd.m,v:sum[k]/tw}));
+  return cand.map((cd,k)=>({m:cd.m,v:sum[k]/tw,p:sumP[k]/tw,w:matchObj([0,1,2,3,4].map(i=>cnt[k*5+i]/tw),tm),dos:sumD[k]/tw,dosTegen:sumDA[k]/tw,dicht:sumB[k]/tw}));
 }
 function mcMove(seat,n,opt){
   const ev=mcEval(seat,n,opt);
   if(!ev.length)return null;
-  let best=ev[0],bv=-1;for(const e of ev){const v=(e.v||0)+Math.random()*1e-6;if(v>bv){bv=v;best=e}}
+  const key=(opt&&opt.obj)||(S.dos?'w':'v');   // met dos cabes telt het om de kans op de wedstrijd, anders om de kans op winst
+  let best=ev[0],bv=-1e9;for(const e of ev){const v=(e[key]||0)+Math.random()*1e-6;if(v>bv){bv=v;best=e}}
   return best.m;
 }
 function step(){
@@ -621,7 +671,7 @@ function smooth(ty,bf,n){
 }
 // Tips van spelers: gaan via Web3Forms per mail naar de maker. De sleutel is niet geheim en staat in de installeerbare versie.
 const TIP_KEY='56a39360-a6ea-4d1b-ab06-fc8da3a74b8b';
-const VER='v27';
+const VER='v28';
 function openTip(){info=false;lvi=false;rules=false;tipOpen=true;tipLock=false;render();tipLock=true}
 function closeTip(){tipOpen=false;tipLock=false;G?step():render()}
 function tipHTML(){
@@ -673,14 +723,60 @@ const WHY={17:'zo open je met de beste dubbel',6:'geen dubbel-kans voor de spele
 const turned=o=>{const t=o.s,v=o.endVal;if(o.m.side==='R')return t.a===v?[t.a,t.b]:[t.b,t.a];if(o.m.side==='L')return t.b===v?[t.a,t.b]:[t.b,t.a];return[t.a,t.b]};
 function bestKey(a,b){let bk=0,bv=0;const g=(o,k)=>{const x=o.parts.find(z=>z.k===k);return x?x.v:0};
   for(const k of new Set([...a.parts,...b.parts].map(x=>x.k))){const d=g(a,k)-g(b,k);if(d>bv){bv=d;bk=k}}return bk}
+// De vier rollen in een ronde, geteld vanaf degene die begint (de Leider): rol, drijfveer, waar je op let
+const ROLES=[
+ ['Leider','Initiatief en aanval','Hoe speel ik mijn langste kleur zo snel mogelijk uit?','je langste kleur zo snel mogelijk uitspelen'],
+ ['Verdediger','Neutraliseren','Hoe breek ik de opening van de Leider af?','de opening van de Leider afbreken'],
+ ['Partner','Faciliteren','Hoe houd ik de weg open voor de Leider?','de weg open houden voor de Leider'],
+ ['Breker','Controleren en blokkeren','Hoe zorg ik dat de Leider past of de ronde stopt?','de Leider laten passen of de ronde stoppen']];
+const roleOf=s=>(((s-G.lead)&3)*(S.ccw?3:1))&3;
+// Wat deze zet betekent vanuit jouw rol
+function roleNote(o){
+  if(G.lead==null)return'';
+  const r=roleOf(0),fl=favNums(G.lead),tp=Math.max(...fl),fav=tp>0?[0,1,2,3,4,5,6].filter(e=>fl[e]===tp):[],hit=o.es.find(e=>fav.includes(e));
+  if(r===0)return o.f.strong.length?`Je laat je langste getal (${o.f.strong[0]}) open.`:'';
+  if(r===1){if(o.en&&fav.includes(o.endVal))return`Je legt op de ${o.endVal} die de Leider open liet.`;return hit!==undefined?`De Leider kan nog verder op zijn ${hit}.`:''}
+  if(r===2){if(hit!==undefined)return`De Leider kan daarna verder op zijn ${hit}.`;return o.en&&fav.includes(o.endVal)?`Je dekt het getal ${o.endVal} van de Leider af.`:''}
+  const lp=[...G.passed[G.lead]].find(e=>o.es.includes(e));
+  if(lp!==undefined)return`De Leider paste op ${lp}: hij moet weer passen.`;
+  if(o.f.closes)return'Je zet het spel dicht.';
+  return hit!==undefined?`Pas op: de Leider kan verder op zijn ${hit}.`:'';
+}
+// Dos cabes en dichtzetten bij deze zet
+function extraNote(o){
+  const f=o.f,p=[],pc=x=>Math.round(x*100)+'%';
+  if(f.dosNow)p.push('laatste steen met dos cabes: dubbele punten!');
+  else if(f.dosReady)p.push(o.dos!=null?`dos cabes in zicht (${pc(o.dos)})`:'dos cabes in zicht: laatste steen past aan beide kanten');
+  if(f.closes)p.push(o.v!=null?`zet het spel dicht (${pc(o.v)} winst)`:'zet het spel dicht');
+  else if(o.dicht>=.3)p.push(`dicht ${pc(o.dicht)}`);
+  if(S.dos&&o.dos>=.05&&!f.dosNow&&!f.dosReady)p.push(`dos ${pc(o.dos)}`);
+  if(S.dos&&o.dosT>=.08)p.push(`tegen-dos ${pc(o.dosT)}`);
+  return p.join(' · ');
+}
+// Bij je eerste steen: wat de uitkomregel (conventie 'Uitkomen met de juiste dubbel') zegt
+function openNote(ev){
+  if(ev[0].m.side!=='c')return'';
+  const hand=G.hands[0],pick=openPick(hand);if(!pick)return'';
+  const cnt=n=>hand.filter(t=>t.a===n||t.b===n).length,n6=cnt(6)-1;
+  if(pick.a===6)return n6>0?`Regel: je hebt nog ${n6} andere 6: open met de dubbel 6.`:'Regel: open met de dubbel 6.';
+  return`Regel: geen andere 6, ${cnt(pick.a)} stenen met ${pick.a}: open met ${pick.a}-${pick.a}.`;
+}
 function hintHTML(ev){
   if(!hint||ev.length<2)return'';
-  const top=ev.slice(0,3),mc=top[0].p!=null,gl=mc?ev[0].p-ev[1].p<.03:ev[0].sc-ev[1].sc<.8,pct=o=>Math.round(o.p*100)+'%';
-  const why=gl?'Het verschil is klein: kies wat jou past.':mc?`Beste zet: ${pct(ev[0])} kans op winst, de volgende ${pct(ev[1])}.`:'Beste zet: '+(WHY[bestKey(ev[0],ev[1])]||'volgens de computer')+'.';
-  return`<div class="abs hint"><div class="hhd"><b>💡 Wat denkt wie?</b><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
-${top.map((o,i)=>`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>open: ${o.es.join(' · ')}${mc?` · <b>${pct(o)}</b> winst`:''}</em></div>
-<div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class="hl"><b>Tegenpartij:</b><span>${tegenLine(o)}</span></div></div>`).join('')}
-<div class="hwhy">${ev.length>3?`En nog ${ev.length-3} andere ${ev.length===4?'zet':'zetten'}. `:''}${why} (advies van de computer${mc?', 1500 doorgerekende verdelingen':''})</div></div>`;
+  const first=ev[0].m.side==='c',mc=ev[0].v!=null,thr=S.dos?.025:.03,top=ev.slice(0,first?3:2);
+  const gl=mc?ev[0].p-ev[1].p<thr:ev[0].sc-ev[1].sc<.8,pct=o=>Math.round(o.v*100)+'%',r=G.lead!=null?roleOf(0):-1;
+  let why;
+  if(gl)why='Het verschil is klein: kies wat jou past.';
+  else if(mc)why=ev[0].v>=ev[1].v?`Beste zet: ${pct(ev[0])} kans op winst, de volgende ${pct(ev[1])}.`:`Beste zet: de meeste punten (${pct(ev[0])} winst, ${Math.round(ev[0].dos*100)}% dos cabes).`;
+  else why='Beste zet: '+(WHY[bestKey(ev[0],ev[1])]||'volgens de computer')+'.';
+  const row=(o,i)=>{
+    const full=!(first&&i>0),rn=full?roleNote(o):'',ex=full?extraNote(o):'';
+    return`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>open: ${o.es.join(' · ')}${mc?` · <b>${pct(o)}</b> winst`:''}</em></div>
+${full?`<div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class="hl"><b>Tegenpartij:</b><span>${tegenLine(o)}</span></div>${rn?`<div class="hl"><b>Rol:</b><span>${rn}</span></div>`:''}${ex?`<div class="hl"><b>Dos/dicht:</b><span>${ex}</span></div>`:''}`:''}</div>`;
+  };
+  return`<div class="abs hint"><div class="hhd"><span><b>💡 Wat denkt wie?</b>${r>=0?` · jij bent de ${ROLES[r][0]}`:''}</span><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
+${top.map(row).join('')}
+${first?`<div class="hwhy"><b>${openNote(ev)}</b></div>`:''}${r>=0?`<div class="hwhy"><b>Focus:</b> ${ROLES[r][3]}.</div>`:''}<div class="hwhy">${ev.length>top.length?`En nog ${ev.length-top.length} andere ${ev.length-top.length===1?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
 }
 function toggleLvInfo(){lvi=!lvi;render()}
 function lvInfoHTML(){
@@ -708,12 +804,20 @@ function rulesHTML(){
 ${S.dos?'<li><b>Dos cabes:</b> kon je met je laatste steen aan beide kanten aanleggen, dan tellen de punten dubbel.</li>':''}
 <li><b>Dicht:</b> past niemand meer, dan wint het team van de speler met de minste stippen in de hand. Hebben twee spelers van verschillende teams evenveel, dan telt het totaal van beide teams. Is dat ook gelijk, dan krijgt niemand een punt.</li>
 <li><b>Wedstrijd:</b> je speelt best of 5, 9 of 19. Wie als eerste meer dan de helft van de rondes heeft, wint de wedstrijd.</li></ul>
+<h3>De vier rollen</h3>
+<p>In elke ronde heeft iedereen een rol, geteld vanaf wie begint. Bij elke naam zie je welke. In de simulaties wint het team van de Leider en de Partner ongeveer 56% van de rondes, omdat de Leider begint. Hoe je een steen kiest verschilt per rol maar weinig.</p>
+<ul>${ROLES.map((r,i)=>`<li><b>${r[0]}</b> (${['begint','na de Leider','tegenover de Leider','net voor de Leider'][i]}): ${r[1].toLowerCase()}. ${r[2]}</li>`).join('')}</ul>
+<h3>Strategie</h3>
+<ul><li><b>Uitkomen:</b> begin met de dubbel 6, behalve als je geen andere zes hebt en een andere dubbel waarvan je minstens twee stenen hebt. Dan begin je met die dubbel.</li>
+${S.dos?'<li><b>Dos cabes:</b> bijna elke ronde kan eindigen met dubbele punten. Met twee stenen over leg je de steen waarna je laatste steen aan beide kanten past. De computer vanaf niveau 8 weegt dit mee, maar niet als een gewone winst de wedstrijd al beslist.</li>':''}
+<li><b>Dichtzetten:</b> ongeveer vier op de tien rondes eindigen dicht. Een getal is dicht als alle 7 stenen ervan liggen. Het spel dichtzetten is gemiddeld geen goede zet (ongeveer 3 procentpunt minder winstkans), behalve als jouw team duidelijk de minste stippen heeft. De tip rekent het voor je uit.</li>
+<li><b>Wat het meest telt:</b> getallen laten liggen waarvan bijna alle stenen gespeeld zijn, een dubbel vroeg leggen, flexibel blijven (zelf nog stenen houden die erop passen) en zware stenen eerder leggen.</li></ul>
 <button class="go" onclick="toggleRules()">Sluiten</button></div>`;
 }
 function infoHTML(){
   if(!info)return'';
   return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleInfo()"></div><div class="abs card infop"><h2>Niveaus en promotie</h2>
-<p>Je begint op niveau 1, waar de computer willekeurig speelt. Je speelt elke wedstrijd op jouw niveau. Win je, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau omlaag (op niveau 1 en op niveau ${LV.length} blijf je staan als je daar respectievelijk verliest of wint). West, Oost en je maat Noord spelen alle drie op jouw niveau. Niveau 2 tot en met ${ORDER.length+1} voegen elk een conventie toe; bij een conflict wint die van het lagere niveau. Vanaf niveau ${ORDER.length+2} rekent de computer kansen uit. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste, nooit in andermans hand.</p>
+<p>Je begint op niveau 1, waar de computer willekeurig speelt. Je speelt elke wedstrijd op jouw niveau. Win je, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau omlaag (op niveau 1 en op niveau ${LV.length} blijf je staan als je daar respectievelijk verliest of wint). West, Oost en je maat Noord spelen alle drie op jouw niveau. Niveau 2 tot en met ${ORDER.length+1} voegen elk een conventie toe; bij een conflict wint die van het lagere niveau. Niveau ${ORDER.length+2} weegt elke zet met uitgerekende gewichten per rol. Vanaf niveau ${ORDER.length+3} rekent de computer kansen uit. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste, nooit in andermans hand.</p>
 <ol>${LV.map(([n,d],i)=>`<li${i+1===lvl()?' class="now"':''}><b>${n}:</b> ${d}</li>`).join('')}</ol>
 <div class="tipbtn"><button class="go" onclick="toggleInfo()">Sluiten</button><button class="lnk" onclick="toggleInfo();openTip()">💡 Tip insturen</button></div></div>`;
 }
@@ -748,9 +852,9 @@ function render(){
   const mv=moves(0),ok=new Set(mv.map(m=>m.i)),mine=G.turn===0&&!G.over;
   const dup=c.length&&c[0].a===c[c.length-1].b;
   const ev=mine&&C.tips?evalMoves(0,ORDER).filter(o=>!(dup&&o.m.side==='R')):[];
-  if(hint&&hmc)for(const o of ev){const x=hmc.find(z=>z.m.i===o.m.i&&z.m.side===o.m.side);o.p=x?x.v:null}
+  if(hint&&hmc)for(const o of ev){const x=hmc.find(z=>z.m.i===o.m.i&&z.m.side===o.m.side);if(x){o.v=x.v;o.p=S.dos?x.w:x.v;o.dos=x.dos;o.dosT=x.dosTegen;o.dicht=x.dicht}else o.p=null}
   ev.sort((x,y)=>x.p!=null&&y.p!=null?(y.p-x.p)||(y.sc-x.sc):y.sc-x.sc);
-  const canHint=ev.length>=2,best=hint&&canHint&&(ev[0].p!=null?ev[0].p-ev[1].p>=.03:ev[0].sc-ev[1].sc>=.8)?ev[0]:null;
+  const canHint=ev.length>=2,best=hint&&canHint&&(ev[0].p!=null?ev[0].p-ev[1].p>=(S.dos?.025:.03):ev[0].sc-ev[1].sc>=.8)?ev[0]:null;
   const sel=G.sel!==null?mv.filter(m=>m.i===G.sel).map(m=>m.side):[];
   const ghost=side=>({...orient(G.hands[0][G.sel],side),g:side});
   const ch=c.length?[...(sel.includes('L')?[ghost('L')]:[]),...c,...(sel.includes('R')?[ghost('R')]:[])]:[];
@@ -773,7 +877,8 @@ function render(){
     return dom(p,q,i.v,nw?'new':'',fv+pos)+(G.over||who.has(o)?`<span class="pl t${own%2}${who.has(o)?' rc':''}${nw?' new':''}" style="${fv}left:${bx}px;top:${by}px">${INI[own]}</span>`:'');
   }).join('');
   const bk=s=>G.over?G.hands[s].map(t=>dom(t.a,t.b,false,'r')).join(''):'<i></i>'.repeat(G.hands[s].length);
-  const seat=s=>`<div class="abs seat ${'.wne'[s]}${G.turn===s&&!G.over?' turn':''}"><div class="bk"><span class="nm">${G.over&&sv===s?'👑 ':''}${s===2?'Noord (maat)':SHORT[s]}</span>${G.over?`<span class="pts">${tot(s)} stippen</span>`:ps.has(s)?`<div class="pas${lp===s?' pop':''}" role="img" aria-label="gepast">P</div>`:''}${bk(s)}</div></div>`;
+  const rl=s=>`<small class="rl">· ${ROLES[roleOf(s)][0]}</small>`;
+  const seat=s=>`<div class="abs seat ${'.wne'[s]}${G.turn===s&&!G.over?' turn':''}"><div class="bk"><span class="nm">${G.over&&sv===s?'👑 ':''}${s===2?'Noord (maat)':SHORT[s]}${rl(s)}</span>${G.over?`<span class="pts">${tot(s)} stippen</span>`:ps.has(s)?`<div class="pas${lp===s?' pop':''}" role="img" aria-label="gepast">P</div>`:''}${bk(s)}</div></div>`;
   const ps=new Set(G.hist.slice(-3).filter(h=>!h.o).map(h=>h.seat));
   const status=G.over?'':G.sel!==null?'Kies waar de steen moet komen':G.note?G.note:G.turn?`${SHORT[G.turn]} denkt na…`:mv.length?(c.length?'Jij bent aan de beurt':'Leg een steen naar keuze'):'Je kunt niet leggen: tik op tafel';
   const t=G.over&&G.over.team;
@@ -785,7 +890,7 @@ function render(){
   const showFx=G.over&&!G.fx;if(G.over)G.fx=true;
   const nc=showFx&&t===0?(G.over.dos?60:36):0,CC=['#e0b04a','#ef8d78','#fff','#7fd1ae','#9db8ff'];
   const fx=showFx?`<div class="abs fx"><div class="abs rib ${t===0?'':t===null?'g':'l'}">${head}<small>${sub}</small></div>${Array.from({length:nc},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${CC[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2.2+Math.random()*1.6}s"></i>`).join('')}</div>`:'';
-    const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl endc"><h3>${head}</h3><div>${sub}</div>${done?`<div class="lvn">${careerLine()}</div>`:''}<button class="go" onclick="${done?'start()':'deal()'}">${done?'Volgende wedstrijd':'Volgende ronde'}</button></div>`:'';
+    const endp=G.over?`<div class="abs mine"><span class="nm">${sv===0?'👑 ':''}Zuid${rl(0)}</span><span class="pts">${tot(0)} stippen</span></div><div class="abs ctl endc"><h3>${head}</h3><div>${sub}</div>${done?`<div class="lvn">${careerLine()}</div>`:''}<button class="go" onclick="${done?'start()':'deal()'}">${done?'Volgende wedstrijd':'Volgende ronde'}</button></div>`:'';
   a.innerHTML=`<div class="abs score">${dots(0)}${dots(1)}Best of ${S.bestOf} · ronde ${round} · niveau ${lvl()} <button class="ib" onclick="toggleLvInfo()" aria-label="Uitleg van de niveaus">i</button> · ${S.ccw?'↺':'↻'}</div>
 <button class="abs quit" onclick="reset()" aria-label="Stoppen">✕</button>
 <button class="abs quit info" onclick="toggleInfo()" aria-label="Uitleg">i</button>
@@ -793,7 +898,7 @@ ${seat(1)}${seat(2)}${seat(3)}
 <div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
 <div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}${best&&best.m.i===i?' best':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
-${G.over?endp:`<div class="abs ctl"><div>${status}</div><div class="cbtn">${C.tips?`<button class="hintb${canHint?' on':''}" onclick="toggleHint()" ${canHint?'':'disabled'} aria-label="Tip: wat denken je maat en de tegenstanders?">💡</button>`:''}<button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div></div>`}${fx}${hintHTML(ev)}${infoHTML()}${lvInfoHTML()}${tipHTML()}`;
+${G.over?endp:`<div class="abs mine lift${G.turn===0?' turn':''}"><span class="nm">Zuid${rl(0)}</span></div><div class="abs ctl"><div>${status}</div><div class="cbtn">${C.tips?`<button class="hintb${canHint?' on':''}" onclick="toggleHint()" ${canHint?'':'disabled'} aria-label="Tip: wat denken je maat en de tegenstanders?">💡</button>`:''}<button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div></div>`}${fx}${hintHTML(ev)}${infoHTML()}${lvInfoHTML()}${tipHTML()}`;
   smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
