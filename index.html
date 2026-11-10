@@ -103,6 +103,25 @@ h2{margin:0 0 6px}
 .infop li{margin:2px 0}
 .infop .go{padding:8px;font-size:15px}
 .infop li.now{background:#e0b04a33;border-radius:6px}
+.cbtn{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:6px}
+.cbtn .tik{margin:0}
+.hintb{width:44px;height:40px;padding:0;border-radius:10px;border:2px solid #fff8;background:transparent;font-size:19px}
+.hintb.on{background:var(--brass);border-color:var(--brass);animation:hbp 1.6s infinite}
+.hintb:disabled{opacity:.35;cursor:default}
+@keyframes hbp{50%{box-shadow:0 0 0 6px #e0b04a55}}
+.hint{right:12px;top:44px;width:380px;z-index:4;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 10px;box-shadow:0 6px 16px #0006;font-size:11.5px;line-height:1.3}
+.hhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.hhd button{border:0;background:none;font-size:15px;padding:0 4px}
+.hrow{padding:4px 0;border-top:1px solid var(--line)}
+.hrow.top{background:#e0b04a2e;border-radius:6px;padding:4px 6px}
+.hh{display:flex;align-items:center;gap:6px;font-weight:700}
+.hh em{font-weight:400;font-style:normal;opacity:.75;margin-left:auto}
+.hint .d.m{--s:13px}
+.hl{display:flex;gap:4px}
+.hl b{min-width:70px;font-weight:700}
+.hwhy{margin-top:4px;opacity:.85;font-size:11px}
+.st{position:relative}
+.st.best::after{content:"⭐";position:absolute;top:-13px;right:-3px;font-size:15px}
 .tipp{top:8px;transform:translateX(-50%);width:600px}
 .tipp h2{font-size:18px;margin:0 0 2px}
 .tipmsg{font-size:12.5px;min-height:1.4em;margin:2px 0 4px}
@@ -111,21 +130,6 @@ h2{margin:0 0 6px}
 .tipbtn .naam{flex:1;width:auto}
 .tipbtn .go{width:auto;padding:9px 18px;margin:0}
 .tipbtn .lnk{margin:0;display:inline}
-.bub{max-width:230px;padding:6px 12px 8px;border-radius:18px;background:#fff;color:#1d2b23;font-size:13px;line-height:1.25;box-shadow:0 4px 10px #0006;pointer-events:none;z-index:4}
-.bub small{display:block;font-weight:700;font-size:10.5px;color:#2c7a4f;margin-bottom:1px}
-.bub.b1 small,.bub.b3 small{color:#c8553f}
-.bub::after{content:"";position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg)}
-.bub.pop{animation:bubpop .3s cubic-bezier(.2,.9,.3,1.3)}
-.bub.out{animation:bubout .5s forwards}
-@keyframes bubpop{from{transform:scale(.5);opacity:0}}
-@keyframes bubout{to{opacity:0;transform:translateY(-6px)}}
-.bub.b1{left:14px;top:46px}.bub.b1::after{left:24px;bottom:-5px}
-.bub.b3{right:14px;top:46px}.bub.b3::after{right:24px;bottom:-5px}
-.bub.b2{left:566px;top:16px;max-width:190px}.bub.b2::after{left:-5px;top:16px}
-.bub.b0{left:128px;top:262px}.bub.b0::after{left:150px;bottom:-5px}
-.bub.big{max-width:270px;font-size:21px;font-weight:800;padding:8px 16px 10px;background:#ffe9a6}
-.bub.big::after{background:#ffe9a6}
-.bub.big small{font-size:11px}
 .ib{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:6px;padding:0;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;font:700 11px system-ui,sans-serif;vertical-align:middle;cursor:pointer}
 .infop.wide{width:800px;max-height:376px;padding:12px 16px}
 .infop.wide h2{margin:0 0 4px;font-size:20px}
@@ -186,7 +190,7 @@ h2{margin:0 0 6px}
 @keyframes pulse{50%{transform:scale(1.07)}}
 .d.new,.pl.new{animation:drop .6s cubic-bezier(.2,.8,.25,1)}
 @keyframes drop{from{transform:translate(var(--fx),var(--fy)) scale(1.2);opacity:0}50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.d.new,.pl.new,.gh,.pas.pop,.bub.pop,.bub.out{animation:none}.cf,.rib{display:none}}
+@media (prefers-reduced-motion:reduce){.d.new,.pl.new,.gh,.pas.pop,.hintb.on{animation:none}.cf,.rib{display:none}}
 .st{padding:0;border:0;background:none;border-radius:8px;transition:transform .12s}
 .st:disabled{cursor:default}
 .st.ok{transform:translateY(-8px)}
@@ -228,7 +232,7 @@ const PH=PIPS.map(p=>p.map(i=>3*(2-i%3)+(i/3|0)));
 const half=(n,r)=>`<span class="h">${[0,1,2,3,4,5,6,7,8].map(i=>`<b${(r?PH:PIPS)[n].includes(i)?' class="p"':''}></b>`).join('')}</span>`;
 const dom=(a,b,v,c='',st='')=>`<span class="d${v?' v':''} ${c}" style="${st}">${half(a,!v)}${half(b,!v)}</span>`;
 const AY=139,SS=34,GG=5.6,U=SS+GG/2,P=2*SS+GG,PD=3.5*SS+2*GG,FX=[0,-330,0,330],FY=[190,0,-170,0];
-let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,bub=null,lastKey='',idle1=0,idle2=0,tipOpen=false,tipLock=false,tipSent=0;
+let S={bestOf:5,ccw:false,max:6,dos:true},G=null,tok=0,wins=[0,0],round=0,rw=0,rl=0,tm=0,info=false,rules=false,lvi=false,ovl=null,tipOpen=false,tipLock=false,tipSent=0,hint=false;
 // Loopbaan: je begint op niveau 1 en promoveert of degradeert na elke wedstrijd. Wordt bewaard op dit toestel.
 const KEY='domino-loopbaan';
 const fresh=()=>({naam:'',niv:1,master:false,cert:null,pw:0,pl:0,mw:0,ml:0,ups:0,downs:0,hist:[]});
@@ -253,17 +257,17 @@ function endMatch(win){
 function restart(){C={...fresh(),naam:C.naam,cert:C.cert};save();render()}
 
 function fit(){const b=$('box');document.documentElement.style.setProperty('--k',Math.min(b.clientWidth/844,b.clientHeight/390))}
-function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;bub=null;deal()}
-function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;bub=null;render()}
+function start(){wins=[0,0];round=0;rw=0;rl=0;ovl=null;deal()}
+function reset(){G=null;tok++;wins=[0,0];round=0;ovl=null;lvi=false;render()}
 function deal(){
-  tok++;round++;
+  tok++;round++;hint=false;
   const all=[];
   for(let a=0;a<=S.max;a++)for(let b=a;b<=S.max;b++)all.push({a,b});
   for(let i=all.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[all[i],all[j]]=[all[j],all[i]]}
   const n=all.length/4;
   const hands=[0,1,2,3].map(k=>all.slice(k*n,k*n+n).sort((x,y)=>x.a-y.a||x.b-y.b));
   const st=hands.findIndex(h=>h.some(s=>s.a===S.max&&s.b===S.max));
-  G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],nd:[new Set(),new Set(),new Set(),new Set()],said:false,slot:3+(Math.random()*9|0),
+  G={hands,chain:[],turn:st,passes:0,passed:[0,1,2,3].map(()=>new Set()),sel:null,over:null,hist:[],
      note:`${st?SHORT[st]+' heeft':'Jij hebt'} de dubbel ${S.max} en begint`};
   step();
 }
@@ -278,9 +282,7 @@ function moves(seat){
   return out;
 }
 function place(seat,i,side){
-  if(seat!==0&&G.nd){const pl=G.hands[seat][i];if(pl.a!==pl.b)for(const m of moves(seat)){const t=G.hands[seat][m.i];if(t.a===t.b)G.nd[seat].add(t.a)}}
   const s=G.hands[seat].splice(i,1)[0],c=G.chain;
-  if(seat%2===1&&c.length){const e=side==='L'?c[0].a:c[c.length-1].b;if(G.hands[0].some(t=>t.a===e&&t.b===e))say(seat,'kerkhof',{p:.5})}
   // dos cabes: de laatste steen past aan beide kanten
   G.dos=!G.hands[seat].length&&c.length>0&&(s.a===c[0].a||s.b===c[0].a)&&(s.a===c[c.length-1].b||s.b===c[c.length-1].b);
   if(side==='c')c.push({a:s.a,b:s.b});
@@ -307,11 +309,6 @@ const CONV={
  8:['Tegenstander laten vastlopen','Laat een getal open liggen waarop een tegenstander paste.'],
  9:['Stenen tellen','Laat een getal open liggen waar niemand anders nog een steen van heeft.'],
  10:['Dubbel blokkeren','Laat op elk uiteinde een getal liggen dat een andere tegenstander mist.'],
- 11:['Dubbel van je maat beschermen','Legt niet aan op de dubbel die zijn maat open liet liggen.'],
- 12:['Nieuwe voorkeur van je maat volgen','Speelt naar het getal dat zijn maat als laatste open liet.'],
- 13:['Uitsluiten door keuzes','Leest uit de keuzes van anderen welke dubbels ze niet hebben.'],
- 14:['Stippen tellen bij een blokkade','Telt de stippen die nog in het spel zijn en kiest of hij een blokkade forceert.'],
- 15:['Zware stenen eerst','Legt de steen met de meeste stippen.'],
  16:['Gat in de tafel','Laat liever getallen open waarvan bijna alle stenen al gespeeld zijn.']
 };
 // Volgorde van effect (gemeten in simulaties); conventies zonder merkbaar effect zijn niet opgenomen.
@@ -334,93 +331,45 @@ function favNums(seat){
     if(i===ai){f[s.a]+=s.a===s.b?2:1;if(s.a!==s.b)f[s.b]++}else f[i<ai?s.a:s.b]++});
   return f;
 }
-// Computerspeler: kijkt alleen naar eigen hand, tafel en wie er op welk getal gepast heeft.
-// Hoger niveau = meer conventies; bij een conflict wint de conventie met de meeste impact (de eerste in ORDER).
-function aiMove(seat,lv=lvl(),set=null){
-  const ms=moves(seat),on=set||ORDER.slice(0,lv-1);
-  if(!on.length)return ms[Math.random()*ms.length|0];
-  const act=k=>on.includes(k),W=k=>12-on.indexOf(k);
+// Beoordeelt elke mogelijke zet: punten per conventie plus de feiten erachter. De computer en de tip gebruiken dit allebei.
+// Hij kijkt alleen naar eigen hand, tafel en wie er op welk getal gepast heeft. Bij een conflict wint de eerste conventie in ORDER.
+function evalMoves(seat,on){
+  const ms=moves(seat),act=k=>on.includes(k),W=k=>12-on.indexOf(k);
   const hand=G.hands[seat],c=G.chain,P=(seat+2)%4,O=[(seat+1)%4,(seat+3)%4],N=S.ccw?(seat+3)%4:(seat+1)%4;
-  const fav=act(4)?favNums(P):null,top=fav?Math.max(...fav):0,has=(t,n)=>t.a===n||t.b===n;
-  let rec=[];if(act(12)){const ai=c.indexOf(G.anchor);for(let k=G.hist.length-1;k>=0;k--){const h=G.hist[k];if(h.seat===P&&h.o){const i=c.indexOf(h.o);rec=i===ai?[h.o.a,h.o.b]:[i<ai?h.o.a:h.o.b];break}}}
-  const tablePips=c.reduce((n,t)=>n+t.a+t.b,0);
-  let best=null,bs=-1e9;
-  for(const m of ms){
+  const has=(t,n)=>t.a===n||t.b===n,fav=favNums(P),top=Math.max(...fav);
+  const dblOpt=ms.some(m=>hand[m.i].a===hand[m.i].b);
+  return ms.map(m=>{
     const s=hand[m.i],es=endsAfter(s,m.side),rest=hand.filter((_,j)=>j!==m.i);
-    let sc=Math.random()*.5;
-    if(act(2)){const cnt=[0,1,2,3,4,5,6].map(n=>rest.filter(t=>has(t,n)).length),mx=Math.max(...cnt);if(mx>=2)for(const e of es)if(cnt[e]===mx)sc+=W(2)}
-    const en=m.side==='L'?c[0]:m.side==='R'?c[c.length-1]:null,usedN=e=>c.filter(t=>has(t,e)).length+(has(s,e)?1:0)+rest.filter(t=>has(t,e)).length;
-    if(act(3)&&en&&en.by===P)sc-=W(3);
-    if(act(11)&&en&&en.by===P&&en.a===en.b)sc-=W(11);
-    if(act(12)&&rec.length)for(const e of es)if(rec.includes(e))sc+=W(12);
-    if(act(15))sc+=W(15)*(s.a+s.b)/12;
-    if(act(16))for(const e of es)sc+=W(16)*usedN(e)/7;
-    if(act(14)){ // alle stenen met de uiteinden zijn gespeeld of in mijn hand: niemand anders kan nog leggen
-      if(es.every(e=>usedN(e)>=7)&&rest.every(t=>!es.some(e=>has(t,e)))){
-        const rp=rest.reduce((n,t)=>n+t.a+t.b,0),U=168-tablePips-s.a-s.b-rp;
-        if(rp<U/3-4)sc+=W(14);else if(rp>U/3)sc-=W(14);
-      }
-    }
-    if(act(4)&&top>0)for(const e of es)if(fav[e]===top)sc+=W(4);
-    if(act(5)&&s.a===s.b)sc+=W(5);
-    if(act(6))for(const e of es){const dbl=c.some(t=>t.a===e&&t.b===e)||(s.a===e&&s.b===e)||rest.some(t=>t.a===e&&t.b===e)||(act(13)&&G.nd[N].has(e));if(!dbl&&!G.passed[N].has(e))sc-=W(6)}
-    if(act(7))for(const e of es)if(G.passed[P].has(e))sc-=W(7);
-    if(act(8))for(const o of O)for(const e of es)if(G.passed[o].has(e))sc+=W(8);
-    if(act(9))for(const e of es){const used=c.filter(t=>has(t,e)).length+(has(s,e)?1:0)+rest.filter(t=>has(t,e)).length;if(used>=7)sc+=W(9)}
-    if(act(10)&&((G.passed[O[0]].has(es[0])&&G.passed[O[1]].has(es[1]))||(G.passed[O[1]].has(es[0])&&G.passed[O[0]].has(es[1]))))sc+=W(10);
-    if(sc>bs){bs=sc;best=m}
-  }
+    const en=m.side==='L'?c[0]:m.side==='R'?c[c.length-1]:null,endVal=en?(m.side==='L'?c[0].a:c[c.length-1].b):null;
+    const used=e=>c.filter(t=>has(t,e)).length+(has(s,e)?1:0)+rest.filter(t=>has(t,e)).length;
+    const parts=[],add=(k,v)=>{if(act(k)&&v)parts.push({k,v})};
+    const cnt=[0,1,2,3,4,5,6].map(n=>rest.filter(t=>has(t,n)).length),mx=Math.max(...cnt);
+    const strong=mx>=2?es.filter(e=>cnt[e]===mx):[];
+    add(2,strong.length*W(2));
+    add(3,en&&en.by===P?-W(3):0);
+    const favE=top>0?es.filter(e=>fav[e]===top):[];
+    add(4,favE.length*W(4));
+    add(5,s.a===s.b?W(5):0);
+    const entry=es.filter(e=>!(c.some(t=>t.a===e&&t.b===e)||(s.a===e&&s.b===e)||rest.some(t=>t.a===e&&t.b===e)||G.passed[N].has(e)));
+    add(6,-entry.length*W(6));
+    const pPass=es.filter(e=>G.passed[P].has(e));add(7,-pPass.length*W(7));
+    const oPass=[];for(const o of O)for(const e of es)if(G.passed[o].has(e))oPass.push([o,e]);add(8,oPass.length*W(8));
+    add(9,es.filter(e=>used(e)>=7).length*W(9));
+    add(10,((G.passed[O[0]].has(es[0])&&G.passed[O[1]].has(es[1]))||(G.passed[O[1]].has(es[0])&&G.passed[O[0]].has(es[1])))?W(10):0);
+    add(16,es.reduce((n,e)=>n+used(e)/7,0)*W(16));
+    return{m,s,es,en,endVal,parts,sc:parts.reduce((n,x)=>n+x.v,0),f:{strong,favE,entry,pPass,oPass,gap:es.filter(e=>7-used(e)<=2),skipDbl:dblOpt&&s.a!==s.b&&!!en,dbl:s.a===s.b,P,N}};
+  });
+}
+function aiMove(seat,lv=lvl(),set=null){
+  const on=set||ORDER.slice(0,lv-1);
+  if(!on.length){const ms=moves(seat);return ms[Math.random()*ms.length|0]}
+  let best=null,bs=-1e9;
+  for(const o of evalMoves(seat,on)){const sc=o.sc+Math.random()*.5;if(sc>bs){bs=sc;best=o.m}}
   return best;
-}
-// Wolkjes met grapjes: verschijnen af en toe, blokkeren niets en verdwijnen vanzelf
-const BUB={
- beurt:['choller, je bent aan de beurt!','kom op man, de stenen worden koud!','wakker worden, het is jouw beurt!','denk je nou aan je pensioen of aan je zet?'],
- seinen:['zit je nou te seinen pikkebaas?','ik zie je kijken, hoor!','je maat kan je niet helpen, hè!'],
- knokkels:['heb je pleisters meegenomen voor je knokkels?','rustig aan, de tafel is niet van jou!','zo klinkt een dubbel, jongens!','de buren hebben het gehoord!'],
- kerkhof:['sorry vriend, maar je dubbel is gaan rusten op het kerkhof','begraven die dubbel, rust zacht!','daar ging je dubbel, dag dag!'],
- tafel:['swa maak ons nog een paar bacos, beetje cola voor de kleur','wie haalt er nog wat te drinken?','laat de stenen maar rollen!','niet zo snel, we zitten hier gezellig!','rustig spelen, de stenen bijten niet!','dit wordt een lange avond, jongens!','schuif maar aan, er is nog plek!'],
- schoenen:['ik heb schoenen meegenomen die jou prima gaan passen!','tik tik tik, de mooiste muziek aan tafel!','niks? lekker voor ons!','oei, pas! dat hoor ik graag'],
- dos:['dooosssssssss kabes!!'],
- pas:['tik tik, ik heb niks hoor!','ik pas, spelen jullie maar lekker door','niks voor mij, sorry!'],
- wij:['beginnersgeluk, dat is het!','dat was een ongelukje, hoor','we zijn nog niet klaar met jullie!'],
- zij:['zo, die staat!','dat noem ik nou domino','kijk en leer, jongens!']
-};
-// Per soort wolkje komt elke tekst een keer voorbij voordat er een herhaald wordt (ook na heropenen van de app)
-function pickLine(key){
-  const t=BUB[key];if(t.length===1)return t[0];
-  C.seen=C.seen||{};let u=C.seen[key]||[];if(u.length>=t.length)u=[];
-  const left=t.map((_,i)=>i).filter(i=>!u.includes(i)),i=left[Math.random()*left.length|0];
-  u.push(i);C.seen[key]=u;save();return t[i];
-}
-const WHO=['Zuid','West','Noord (maat)','Oost'];
-const opp=()=>[1,3][Math.random()*2|0],ai1=()=>[1,2,3][Math.random()*3|0];
-// Hooguit een wolkje per potje. o.p = kans, o.big = groot wolkje, o.force = altijd tonen (dos cabes)
-function say(seat,key,o={}){
-  const now=Date.now(),p=o.p===undefined?1:o.p;
-  if(!G||(!o.force&&(G.said||(bub&&now<bub.until)||(key===lastKey&&Math.random()<.7)||Math.random()>p)))return false;
-  const b={seat,text:pickLine(key),until:now+(o.big?4300:3700),big:!!o.big,shown:false,out:false};
-  bub=b;G.said=true;lastKey=key;
-  setTimeout(()=>{if(bub===b){b.out=true;if(G)render()}},b.until-now-500);
-  setTimeout(()=>{if(bub===b){bub=null;if(G)render()}},b.until-now);
-  return true;
-}
-function bubHTML(){
-  if(!bub||Date.now()>bub.until)return'';
-  const b=bub,c=`bub b${b.seat}${b.big?' big':''}${b.shown?'':' pop'}${b.out?' out':''}`;b.shown=true;
-  return`<div class="abs ${c}"><small>${WHO[b.seat]}</small>${esc(b.text)}</div>`;
-}
-// Als jij lang over je zet doet, tikt een tegenspeler je aan
-function idleTimers(){
-  clearTimeout(idle1);clearTimeout(idle2);
-  const t=tok,n=G.hist.length,still=()=>t===tok&&G&&!G.over&&G.turn===0&&G.hist.length===n&&!info&&!tipOpen&&!ovl;
-  idle1=setTimeout(()=>{if(still()&&say(S.ccw?1:3,'beurt'))render()},7000);
-  idle2=setTimeout(()=>{if(still()&&say(opp(),'seinen'))render()},16000);
 }
 function step(){
   render();
   clearTimeout(tm);
-  clearTimeout(idle1);clearTimeout(idle2);
-  if(G.turn===0&&!G.over&&!info&&!tipOpen)idleTimers();
   if(G.over||G.turn===0||info||tipOpen)return;
   const t=tok;
   tm=setTimeout(()=>{if(t===tok&&G&&!G.over&&G.turn)ai()},900);
@@ -430,11 +379,11 @@ function ai(){
   if(m){place(t,m.i,m.side);after(t)}else doPass(t);
 }
 function after(t){if(!G.hands[t].length)return finish(t);advance()}
-function advance(){G.turn=(G.turn+(S.ccw?3:1))%4;if(!G.said&&G.hist.length>=G.slot)G.turn===0?say(S.ccw?1:3,'beurt',{p:.8}):say(ai1(),'tafel',{p:.8});step()}
+function advance(){G.turn=(G.turn+(S.ccw?3:1))%4;step()}
 function doPass(t){
   const c=G.chain;
   G.passed[t].add(c[0].a);G.passed[t].add(c[c.length-1].b);
-  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});if(t)say(t,'pas',{p:.15});
+  G.passes++;G.note='';G.lastPass=t;G.hist.push({seat:t});
   G.passes>=4?finish(null):advance();
 }
 function pick(i){
@@ -447,8 +396,8 @@ function pick(i){
   G.sel=i;render();
 }
 function put(side){if(G.sel!==null)play(G.sel,side)}
-function play(i,side){G.sel=null;const dbl=G.hands[0][i].a===G.hands[0][i].b;place(0,i,side);if(dbl)say(opp(),'knokkels',{p:.35});after(0)}
-function tik(){if(G.turn||G.over||moves(0).length)return;say(opp(),'schoenen',{p:.5});doPass(0)}
+function play(i,side){hint=false;G.sel=null;place(0,i,side);after(0)}
+function tik(){if(G.turn||G.over||moves(0).length)return;hint=false;doPass(0)}
 function finish(seat){
   let team,note,blk=null;
   if(seat!==null){team=seat%2;note=`${seat?SHORT[seat]+' heeft':'Jij hebt'} geen stenen meer.`}
@@ -463,7 +412,6 @@ function finish(seat){
   if(team===0){rw++;C.pw++}else if(team===1){rl++;C.pl++}
   const need=Math.ceil(S.bestOf/2);let career=null;
   if(wins.some(w=>w>=need))career=endMatch(wins[0]>=need);else save();
-  if(dos)say(seat,'dos',{force:true,big:true});else if(team===0)say(opp(),'wij',{p:.35});else if(team===1)say(opp(),'zij',{p:.35});
   G.over={team,note,seat,dos,blk,career};render();
 }
 // Slang: twee armen vanaf de eerste steen; rechts loopt naar beneden, links naar boven.
@@ -494,7 +442,7 @@ function smooth(ty,bf,n){
 }
 // Tips van spelers: gaan via Web3Forms per mail naar de maker. De sleutel is niet geheim en staat in de installeerbare versie.
 const TIP_KEY='56a39360-a6ea-4d1b-ab06-fc8da3a74b8b';
-const VER='v23';
+const VER='v24';
 function openTip(){info=false;lvi=false;rules=false;tipOpen=true;tipLock=false;render();tipLock=true}
 function closeTip(){tipOpen=false;tipLock=false;G?step():render()}
 function tipHTML(){
@@ -520,6 +468,40 @@ async function sendTip(){
     if(j&&j.success){tipSent=Date.now();$('tiptxt').value='';m.textContent='Bedankt voor je tip! Hij is verstuurd.';b.textContent='Sluiten';b.disabled=false;b.onclick=closeTip}
     else{m.textContent='Versturen is niet gelukt. Probeer het later nog eens.';b.disabled=false}
   }catch(e){m.textContent='Versturen is niet gelukt. Controleer je internet en probeer het nog eens.';b.disabled=false}
+}
+// Tip: wat denken je maat en de tegenstanders bij elke keuze, en welke zet vindt de computer het beste
+function toggleHint(){hint=!hint;render()}
+const sideTxt=o=>o.m.side==='c'?'als eerste steen':`${o.m.side==='L'?'links':'rechts'}, op de ${o.endVal}`;
+function maatLine(o){
+  const f=o.f;
+  if(f.favE.length)return`Noord kan verder op zijn ${f.favE[0]}.`;
+  if(o.en&&o.en.by===f.P)return`Je legt op de ${o.endVal} die je maat open liet.`;
+  if(f.pPass.length)return`Noord paste op ${f.pPass[0]}: kan daar niet verder.`;
+  if(f.strong.length)return`Noord ziet: je sterkste getal is ${f.strong[0]}.`;
+  if(f.dbl)return'Noord ziet dat je een dubbel kwijt bent.';
+  return'Noord leest hier weinig uit.';
+}
+function tegenLine(o){
+  const f=o.f;
+  if(f.entry.length)return`${NM[f.N]} kan op de ${f.entry[0]} misschien een dubbel leggen.`;
+  if(f.oPass.length)return`${NM[f.oPass[0][0]]} paste op ${f.oPass[0][1]} en moet weer passen.`;
+  if(f.skipDbl)return'Ze denken dat je geen dubbel hebt.';
+  if(f.gap.length)return`Op de ${f.gap[0]} kan bijna niemand meer leggen.`;
+  if(f.strong.length)return`Ze zien dat je veel ${f.strong[0]} hebt.`;
+  return'Ze lezen hier weinig uit.';
+}
+const WHY={6:'geen dubbel-kans voor de speler na jou',5:'je raakt een dubbel vroeg kwijt',4:'je maat kan verder op zijn getal',2:'je laat je sterkste getal open',16:'bijna alles van dat getal is gespeeld',3:'je legt niet op de steen van je maat',7:'je sluit een getal af waarop je maat paste',8:'een tegenstander die paste moet weer passen',9:'niemand anders heeft dat getal nog',10:'je blokkeert beide tegenstanders'};
+const turned=o=>{const t=o.s,v=o.endVal;if(o.m.side==='R')return t.a===v?[t.a,t.b]:[t.b,t.a];if(o.m.side==='L')return t.b===v?[t.a,t.b]:[t.b,t.a];return[t.a,t.b]};
+function bestKey(a,b){let bk=0,bv=0;const g=(o,k)=>{const x=o.parts.find(z=>z.k===k);return x?x.v:0};
+  for(const k of new Set([...a.parts,...b.parts].map(x=>x.k))){const d=g(a,k)-g(b,k);if(d>bv){bv=d;bk=k}}return bk}
+function hintHTML(ev){
+  if(!hint||ev.length<2)return'';
+  const top=ev.slice(0,3),gl=ev[0].sc-ev[1].sc<0.8;
+  const why=gl?'Het verschil is klein: kies wat jou past.':'Beste zet: '+(WHY[bestKey(ev[0],ev[1])]||'volgens de computer')+'.';
+  return`<div class="abs hint"><div class="hhd"><b>💡 Wat denkt wie?</b><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
+${top.map((o,i)=>`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>daarna open: ${o.es.join(' · ')}</em></div>
+<div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class="hl"><b>Tegenpartij:</b><span>${tegenLine(o)}</span></div></div>`).join('')}
+<div class="hwhy">${ev.length>3?`En nog ${ev.length-3} andere ${ev.length===4?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
 }
 function toggleLvInfo(){lvi=!lvi;render()}
 function lvInfoHTML(){
@@ -604,6 +586,7 @@ function render(){
   const last=G.last;G.last=null;const lp=G.lastPass;G.lastPass=-1;
   const c=G.chain,need=Math.ceil(S.bestOf/2),done=wins.some(w=>w>=need);
   const mv=moves(0),ok=new Set(mv.map(m=>m.i)),mine=G.turn===0&&!G.over;
+  const ev=mine?evalMoves(0,ORDER).sort((x,y)=>y.sc-x.sc):[],canHint=ev.length>=2,best=hint&&canHint&&ev[0].sc-ev[1].sc>=0.8?ev[0]:null;
   const sel=G.sel!==null?mv.filter(m=>m.i===G.sel).map(m=>m.side):[];
   const ghost=side=>({...orient(G.hands[0][G.sel],side),g:side});
   const ch=c.length?[...(sel.includes('L')?[ghost('L')]:[]),...c,...(sel.includes('R')?[ghost('R')]:[])]:[];
@@ -646,8 +629,8 @@ function render(){
 ${seat(1)}${seat(2)}${seat(3)}
 <div class="abs board" style="transform:translateY(${ty}px) scale(${bf});transform-origin:348px ${AY}px">${its.length?stones:'<p class="empty">De tafel is nog leeg</p>'}</div>
 
-<div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
-${G.over?endp:`<div class="abs ctl"><div>${status}</div><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div>`}${fx}${bubHTML()}${infoHTML()}${lvInfoHTML()}${tipHTML()}${ovlHTML()}`;
+<div class="abs hand${G.over?' end':''}">${G.hands[0].map((s,i)=>`<button class="st${mine&&ok.has(i)?' ok':''}${mine&&!ok.has(i)?' no':''}${G.sel===i?' sel':''}${best&&best.m.i===i?' best':''}" ${mine?'':'disabled'} onclick="pick(${i})" aria-label="Steen ${s.a}-${s.b}">${dom(s.a,s.b,1)}</button>`).join('')}</div>
+${G.over?endp:`<div class="abs ctl"><div>${status}</div><div class="cbtn"><button class="hintb${canHint?' on':''}" onclick="toggleHint()" ${canHint?'':'disabled'} aria-label="Tip: wat denken je maat en de tegenstanders?">💡</button><button class="tik" onclick="tik()" ${mine&&!mv.length?'':'disabled'}>Tik op tafel (pas)</button></div></div>`}${fx}${hintHTML(ev)}${infoHTML()}${lvInfoHTML()}${tipHTML()}${ovlHTML()}`;
   smooth(ty,bf,its.length);
 }
 fit();render();addEventListener('resize',fit);
