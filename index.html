@@ -185,6 +185,7 @@ h2{margin:0 0 6px}
 .mine .nm{white-space:nowrap}
 .rl{font-size:10px;font-weight:400;opacity:.85;margin-left:3px}
 .seat.w .nm{left:0;transform:none}
+.seat .nm{z-index:3}
 .seat.e .nm{left:auto;right:0;transform:none}
 .fx{inset:0;pointer-events:none;z-index:7;overflow:hidden}
 .rib{left:50%;top:44%;padding:8px 34px 10px;border-radius:14px;font-size:38px;font-weight:800;line-height:1.1;text-align:center;white-space:nowrap;color:#2a1d00;background:var(--brass);box-shadow:0 8px 0 #0004;animation:pop 2.8s both}
@@ -380,7 +381,7 @@ function evalMoves(seat,on){
       closes:rest.length>0&&es.every(e=>c.filter(t=>has(t,e)).length+(has(s,e)?1:0)===7),
       dosNow:!!S.dos&&hand.length===1&&c.length>0&&(s.a===c[0].a||s.b===c[0].a)&&(s.a===c[c.length-1].b||s.b===c[c.length-1].b),
       dosReady:!!S.dos&&hand.length===2&&rest.length===1&&(rest[0].a===es[0]||rest[0].b===es[0])&&(rest[0].a===es[1]||rest[0].b===es[1]),dbl:s.a===s.b,P,N}};
-    if(act(23)){const ft=roleFeat(seat,res),w=RWR[roleOf(seat)],v=ft.reduce((n,x,i)=>n+x*w[i],0);res.parts.push({k:23,v});res.sc+=v}
+    if(act(23)){const ft=roleFeat(seat,res),w=RWR[startRole(seat)],v=ft.reduce((n,x,i)=>n+x*w[i],0);res.parts.push({k:23,v});res.sc+=v}
     return res;
   });
 }
@@ -671,7 +672,7 @@ function smooth(ty,bf,n){
 }
 // Tips van spelers: gaan via Web3Forms per mail naar de maker. De sleutel is niet geheim en staat in de installeerbare versie.
 const TIP_KEY='56a39360-a6ea-4d1b-ab06-fc8da3a74b8b';
-const VER='v28';
+const VER='v29';
 function openTip(){info=false;lvi=false;rules=false;tipOpen=true;tipLock=false;render();tipLock=true}
 function closeTip(){tipOpen=false;tipLock=false;G?step():render()}
 function tipHTML(){
@@ -724,23 +725,23 @@ const turned=o=>{const t=o.s,v=o.endVal;if(o.m.side==='R')return t.a===v?[t.a,t.
 function bestKey(a,b){let bk=0,bv=0;const g=(o,k)=>{const x=o.parts.find(z=>z.k===k);return x?x.v:0};
   for(const k of new Set([...a.parts,...b.parts].map(x=>x.k))){const d=g(a,k)-g(b,k);if(d>bv){bv=d;bk=k}}return bk}
 // De vier rollen in een ronde, geteld vanaf degene die begint (de Leider): rol, drijfveer, waar je op let
+// De Leider van het moment is wie als eerste uit is als iedereen vanaf nu kan aanleggen: de minste stenen, bij gelijk wie het eerst
+// aan de beurt komt. De andere drie plekken tellen vanaf de Leider. De Leider kan dus tijdens een ronde wisselen.
+// Per rol: label bij de naam, zin in de tip, uitleg in de spelregels.
 const ROLES=[
- ['Leider','Initiatief en aanval','Hoe speel ik mijn langste kleur zo snel mogelijk uit?','je langste kleur zo snel mogelijk uitspelen'],
- ['Verdediger','Neutraliseren','Hoe breek ik de opening van de Leider af?','de opening van de Leider afbreken'],
- ['Partner','Faciliteren','Hoe houd ik de weg open voor de Leider?','de weg open houden voor de Leider'],
- ['Breker','Controleren en blokkeren','Hoe zorg ik dat de Leider past of de ronde stopt?','de Leider laten passen of de ronde stoppen']];
-const roleOf=s=>(((s-G.lead)&3)*(S.ccw?3:1))&3;
-// Wat deze zet betekent vanuit jouw rol
+ ['Leider','jij bent de Leider','is als eerste uit als iedereen kan aanleggen'],
+ ['na Leider','jij komt na de Leider','is aan de beurt direct na de Leider'],
+ ['maat Leider','jij bent de maat van de Leider','zit tegenover de Leider'],
+ ['vóór Leider','de Leider komt na jou','is aan de beurt direct vóór de Leider']];
+function leaderNow(){const t=G.turn,d=S.ccw?3:1;let L=t,b=1e9;for(let q=0;q<4;q++){const p=(t+q*d)&3,k=(G.hands[p].length-1)*4+q;if(k<b){b=k;L=p}}return L}
+const roleOf=s=>(((s-leaderNow())&3)*(S.ccw?3:1))&3;
+const startRole=s=>(((s-G.lead)&3)*(S.ccw?3:1))&3;   // rol geteld vanaf wie de ronde begon: alleen voor de gewichten van niveau 8
+// Conventie "Komt de Leider na jou, blokkeer hem": hoeveel stenen die hij kan hebben passen na deze zet nog op de twee uiteinden
 function roleNote(o){
-  if(G.lead==null)return'';
-  const r=roleOf(0),fl=favNums(G.lead),tp=Math.max(...fl),fav=tp>0?[0,1,2,3,4,5,6].filter(e=>fl[e]===tp):[],hit=o.es.find(e=>fav.includes(e));
-  if(r===0)return o.f.strong.length?`Je laat je langste getal (${o.f.strong[0]}) open.`:'';
-  if(r===1){if(o.en&&fav.includes(o.endVal))return`Je legt op de ${o.endVal} die de Leider open liet.`;return hit!==undefined?`De Leider kan nog verder op zijn ${hit}.`:''}
-  if(r===2){if(hit!==undefined)return`De Leider kan daarna verder op zijn ${hit}.`;return o.en&&fav.includes(o.endVal)?`Je dekt het getal ${o.endVal} van de Leider af.`:''}
-  const lp=[...G.passed[G.lead]].find(e=>o.es.includes(e));
-  if(lp!==undefined)return`De Leider paste op ${lp}: hij moet weer passen.`;
-  if(o.f.closes)return'Je zet het spel dicht.';
-  return hit!==undefined?`Pas op: de Leider kan verder op zijn ${hit}.`:'';
+  if(roleOf(0)!==3)return'';
+  const L=leaderNow(),hand=G.hands[0],rest=hand.filter((_,j)=>j!==o.m.i);let pm=0;G.passed[L].forEach(x=>pm|=NMK[x]);
+  const n=pc(ALL&~hm(G.chain)&~(1<<SID[o.s.a*7+o.s.b])&~hm(rest)&~pm&(NMK[o.es[0]]|NMK[o.es[1]]));
+  return n===0?'De Leider kan hier niet op: hij moet passen.':`Blokkeren: er ${n===1?'is nog 1 steen':'zijn nog '+n+' stenen'} waar de Leider op kan.`;
 }
 // Dos cabes en dichtzetten bij deze zet
 function extraNote(o){
@@ -764,7 +765,7 @@ function openNote(ev){
 function hintHTML(ev){
   if(!hint||ev.length<2)return'';
   const first=ev[0].m.side==='c',mc=ev[0].v!=null,thr=S.dos?.025:.03,top=ev.slice(0,first?3:2);
-  const gl=mc?ev[0].p-ev[1].p<thr:ev[0].sc-ev[1].sc<.8,pct=o=>Math.round(o.v*100)+'%',r=G.lead!=null?roleOf(0):-1;
+  const gl=mc?ev[0].p-ev[1].p<thr:ev[0].sc-ev[1].sc<.8,pct=o=>Math.round(o.v*100)+'%',r=roleOf(0);
   let why;
   if(gl)why='Het verschil is klein: kies wat jou past.';
   else if(mc)why=ev[0].v>=ev[1].v?`Beste zet: ${pct(ev[0])} kans op winst, de volgende ${pct(ev[1])}.`:`Beste zet: de meeste punten (${pct(ev[0])} winst, ${Math.round(ev[0].dos*100)}% dos cabes).`;
@@ -774,9 +775,9 @@ function hintHTML(ev){
     return`<div class="hrow${i===0&&!gl?' top':''}"><div class="hh">${i===0&&!gl?'⭐':''}${dom(...turned(o),false,'m')}<span>${sideTxt(o)}</span><em>open: ${o.es.join(' · ')}${mc?` · <b>${pct(o)}</b> winst`:''}</em></div>
 ${full?`<div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class="hl"><b>Tegenpartij:</b><span>${tegenLine(o)}</span></div>${rn?`<div class="hl"><b>Rol:</b><span>${rn}</span></div>`:''}${ex?`<div class="hl"><b>Dos/dicht:</b><span>${ex}</span></div>`:''}`:''}</div>`;
   };
-  return`<div class="abs hint"><div class="hhd"><span><b>💡 Wat denkt wie?</b>${r>=0?` · jij bent de ${ROLES[r][0]}`:''}</span><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
+  return`<div class="abs hint"><div class="hhd"><span><b>💡 Wat denkt wie?</b>${` · ${ROLES[r][1]}`}</span><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
 ${top.map(row).join('')}
-${first?`<div class="hwhy"><b>${openNote(ev)}</b></div>`:''}${r>=0?`<div class="hwhy"><b>Focus:</b> ${ROLES[r][3]}.</div>`:''}<div class="hwhy">${ev.length>top.length?`En nog ${ev.length-top.length} andere ${ev.length-top.length===1?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
+${first?`<div class="hwhy"><b>${openNote(ev)}</b></div>`:''}${r===3?`<div class="hwhy"><b>Conventie:</b> komt de Leider na jou, blokkeer hem.</div>`:''}<div class="hwhy">${ev.length>top.length?`En nog ${ev.length-top.length} andere ${ev.length-top.length===1?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
 }
 function toggleLvInfo(){lvi=!lvi;render()}
 function lvInfoHTML(){
@@ -804,9 +805,10 @@ function rulesHTML(){
 ${S.dos?'<li><b>Dos cabes:</b> kon je met je laatste steen aan beide kanten aanleggen, dan tellen de punten dubbel.</li>':''}
 <li><b>Dicht:</b> past niemand meer, dan wint het team van de speler met de minste stippen in de hand. Hebben twee spelers van verschillende teams evenveel, dan telt het totaal van beide teams. Is dat ook gelijk, dan krijgt niemand een punt.</li>
 <li><b>Wedstrijd:</b> je speelt best of 5, 9 of 19. Wie als eerste meer dan de helft van de rondes heeft, wint de wedstrijd.</li></ul>
-<h3>De vier rollen</h3>
-<p>In elke ronde heeft iedereen een rol, geteld vanaf wie begint. Bij elke naam zie je welke. In de simulaties wint het team van de Leider en de Partner ongeveer 56% van de rondes, omdat de Leider begint. Hoe je een steen kiest verschilt per rol maar weinig.</p>
-<ul>${ROLES.map((r,i)=>`<li><b>${r[0]}</b> (${['begint','na de Leider','tegenover de Leider','net voor de Leider'][i]}): ${r[1].toLowerCase()}. ${r[2]}</li>`).join('')}</ul>
+<h3>De Leider en de vier rollen</h3>
+<p>De Leider is op elk moment de speler die als eerste uit is als iedereen vanaf dan kan aanleggen: wie de minste stenen heeft, en bij gelijk wie het eerst aan de beurt komt. De Leider kan tijdens een ronde wisselen. Bij elke naam zie je de rol van dat moment.</p>
+<ul>${['Leider','Na de Leider','Maat van de Leider','Vóór de Leider'].map((n,i)=>`<li><b>${n}:</b> ${ROLES[i][2]}.</li>`).join('')}</ul>
+<p><b>Conventie:</b> komt de Leider na jou, blokkeer hem. Laat de getallen liggen waar hij het minst op kan, beide uiteinden samen: getallen waarop hij paste, of waarvan de meeste stenen al liggen of bij jou zitten.</p>
 <h3>Strategie</h3>
 <ul><li><b>Uitkomen:</b> begin met de dubbel 6, behalve als je geen andere zes hebt en een andere dubbel waarvan je minstens twee stenen hebt. Dan begin je met die dubbel.</li>
 ${S.dos?'<li><b>Dos cabes:</b> bijna elke ronde kan eindigen met dubbele punten. Met twee stenen over leg je de steen waarna je laatste steen aan beide kanten past. De computer vanaf niveau 8 weegt dit mee, maar niet als een gewone winst de wedstrijd al beslist.</li>':''}
