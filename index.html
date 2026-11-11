@@ -302,29 +302,29 @@ const ORDER=[6,5,4,2,16,17];
 // Niveau 1 t/m 6: 60.000 gesimuleerde rondes per vergelijking (ongeveer 0,5 procentpunt nauwkeurig). Niveau 7 en 8: 60.000 tot 200.000 rondes (0,2 procentpunt). Niveau 9 t/m 12: 3.000 tot 8.000 rondes (0,6 tot 0,9 procentpunt).
 // Computers aan beide kanten. De rekenende niveaus (9 t/m 12) rekenen om de kans op de wedstrijd; hier telt het aantal gewonnen rondes.
 const INFO=[
- ["Legt 5-5 of 6-6 zodra het kan, als hij hoogstens één andere steen van dat getal heeft.",null,54],
- ["Is hij de Leider met drie of meer stenen van één getal, dan legt hij dat getal open. Niet als zijn maat erop paste of de volger het zelf legde.",52,55],
- ["Heeft hij geen sterke kleur, dan kiest hij de zet waarna hij de meeste verschillende getallen overhoudt.",55,61],
- ["Komt de Leider na hem, dan legt hij de getallen open waar de Leider het minst op kan.",53,63],
- ["Heeft de volger nog drie of meer stenen, dan gaat een zware dubbel vóór blokkeren. Anders blokkeert hij eerst.",50,63],
- ["Is zijn maat de Leider, dan legt hij een getal open waarop de volger paste of dat zijn maat zelf legde.",50,62],
- ["Heeft een tegenstander nog één steen, dan legt hij geen twee gelijke uiteinden.",50,62],
- ["Heeft hij de dubbel en minstens drie andere stenen van dat getal, dan bewaart hij de dubbel zolang iedereen nog vier of meer stenen heeft.",50,62],
- ["Legt geen getal van 4 of hoger open waarvan de dubbel nog niet ligt, als een tegenstander dat getal twee keer liet liggen.",50,61],
- ["Legt geen getal open waarop zijn maat paste, tenzij de volger er ook op paste.",50,61],
- ["Telt bij blokkeren de stenen voor beide uiteinden samen.",51,62],
- ["Legt de tafel dicht als hij schat dat zijn team de speler met de minste stippen heeft.",51,63],
- ["Opende zijn maat met een andere steen dan 6-6, dan houdt hij die getallen de eerste twee beurten open.",50,63],
- ["Is zijn maat de Leider, dan helpt hij zijn maat. Komt de Leider na hem, dan blokkeert hij.",50,63],
- ["Legt een getal open waarop de volger paste, als die op het andere uiteinde ook niet kan.",50,62],
- ["Paste zijn voorganger op een open getal en zijn maat niet, dan speelt hij aan de andere kant.",50,63],
- ["Ontbreekt alleen de dubbel nog, houdt hij zelf een steen van dat getal en is iemand bijna uit, dan legt hij dat getal open.",51,63],
- ["Komt de Leider na hem, dan legt hij een getal open waarvan alle zeven stenen op tafel of in zijn hand zitten.",50,63],
- ["Is een tegenstander bijna uit en kan hij hem niet blokkeren, dan legt hij zijn zwaarste steen.",50,62],
- ["Legt een getal open waarop beide tegenstanders pasten.",50,63],
- ["Rekent met 100 verdelingen uit hoe vaak zijn team bij een dichte tafel wint, en sluit alleen als dat genoeg is.",50,63]
+ ["Legt zijn dubbel afhankelijk van zijn rol. Als Leider elke dubbel; als Volger 3-3 of hoger; als Maat 3-3 of hoger zolang de Blokker drie of meer stenen heeft. Nooit met vier of meer stenen van dat getal.",null,60],
+ ["Legt het getal open waarvan hij zelf de meeste stenen overhoudt, in elke rol. Niet naar een getal waarop zijn teamgenoot paste.",55,65],
+ ["Heeft hij geen sterke kleur, dan kiest hij de zet waarna hij de meeste verschillende getallen overhoudt.",50,64],
+ ["Komt de Leider na hem, dan legt hij de getallen open waar de Leider het minst op kan.",52,65],
+ ["Is hij de Blokker en kan hij een dubbel leggen, dan legt hij die, tenzij blokkeren de Leider echt minder ruimte geeft. Heeft de Leider nog één steen, dan gaat blokkeren voor zodra het iets scheelt.",50,65],
+ ["Is zijn maat de Leider, dan legt hij een getal open waarop de volger paste of dat zijn maat zelf legde.",49,65],
+ ["Heeft een tegenstander nog één steen, dan legt hij geen twee gelijke uiteinden.",49,64],
+ ["Heeft hij de dubbel en minstens drie andere stenen van dat getal, dan bewaart hij de dubbel zolang iedereen nog vier of meer stenen heeft.",49,64],
+ ["Legt geen getal van 4 of hoger open waarvan de dubbel nog niet ligt, als een tegenstander dat getal twee keer liet liggen.",50,64],
+ ["Legt geen getal open waarop zijn maat paste, tenzij de volger er ook op paste.",49,63],
+ ["Telt bij blokkeren de stenen voor beide uiteinden samen.",52,64],
+ ["Legt de tafel dicht als hij schat dat zijn team de speler met de minste stippen heeft.",51,65],
+ ["Opende zijn maat met een andere steen dan 6-6, dan houdt hij die getallen de eerste twee beurten open.",50,64],
+ ["Is zijn maat de Leider, dan helpt hij zijn maat. Komt de Leider na hem, dan blokkeert hij.",50,65],
+ ["Legt een getal open waarop de volger paste, als die op het andere uiteinde ook niet kan.",50,65],
+ ["Paste zijn voorganger op een open getal en zijn maat niet, dan speelt hij aan de andere kant.",50,65],
+ ["Ontbreekt alleen de dubbel nog, houdt hij zelf een steen van dat getal en is iemand bijna uit, dan legt hij dat getal open.",50,65],
+ ["Komt de Leider na hem, dan legt hij een getal open waarvan alle zeven stenen op tafel of in zijn hand zitten.",50,65],
+ ["Is een tegenstander bijna uit en kan hij hem niet blokkeren, dan legt hij zijn zwaarste steen.",50,65],
+ ["Legt een getal open waarop beide tegenstanders pasten.",50,65],
+ ["Rekent met 100 verdelingen uit hoe vaak zijn team bij een dichte tafel wint, en sluit alleen als dat genoeg is.",50,64]
 ];
-const LV=[["Dump zware dubbels","Legt 5-5 of 6-6 zodra het kan, als hij hoogstens één andere steen van dat getal heeft."],["Sterkste kleur","Is hij de Leider met drie of meer stenen van één getal, dan legt hij dat getal open. Niet als zijn maat erop paste of de volger het zelf legde."],["Diversiteit","Heeft hij geen sterke kleur, dan kiest hij de zet waarna hij de meeste verschillende getallen overhoudt."],["Blokkeer de Leider","Komt de Leider na hem, dan legt hij de getallen open waar de Leider het minst op kan."],["Zware dubbel of blokkeren","Heeft de volger nog drie of meer stenen, dan gaat een zware dubbel vóór blokkeren. Anders blokkeert hij eerst."],["Ruimte voor de maat","Is zijn maat de Leider, dan legt hij een getal open waarop de volger paste of dat zijn maat zelf legde."],["Geen dos cabes geven","Heeft een tegenstander nog één steen, dan legt hij geen twee gelijke uiteinden."],["Dubbel bewaren","Heeft hij de dubbel en minstens drie andere stenen van dat getal, dan bewaart hij de dubbel zolang iedereen nog vier of meer stenen heeft."],["Dubbel-afgrendeling","Legt geen getal van 4 of hoger open waarvan de dubbel nog niet ligt, als een tegenstander dat getal twee keer liet liggen."],["Pasgetal van de maat","Legt geen getal open waarop zijn maat paste, tenzij de volger er ook op paste."],["Beide uiteinden","Telt bij blokkeren de stenen voor beide uiteinden samen."],["Sluiten op schatting","Legt de tafel dicht als hij schat dat zijn team de speler met de minste stippen heeft."],["Openingssignaal","Opende zijn maat met een andere steen dan 6-6, dan houdt hij die getallen de eerste twee beurten open."],["Maat of blokkeren","Is zijn maat de Leider, dan helpt hij zijn maat. Komt de Leider na hem, dan blokkeert hij."],["Blinde vlek","Legt een getal open waarop de volger paste, als die op het andere uiteinde ook niet kan."],["Voorstopper","Paste zijn voorganger op een open getal en zijn maat niet, dan speelt hij aan de andere kant."],["Dubbel-wissel","Ontbreekt alleen de dubbel nog, houdt hij zelf een steen van dat getal en is iemand bijna uit, dan legt hij dat getal open."],["Dood getal","Komt de Leider na hem, dan legt hij een getal open waarvan alle zeven stenen op tafel of in zijn hand zitten."],["Zwaarste steen","Is een tegenstander bijna uit en kan hij hem niet blokkeren, dan legt hij zijn zwaarste steen."],["Dubbele pas","Legt een getal open waarop beide tegenstanders pasten."],["Exacte sluiting","Rekent met 100 verdelingen uit hoe vaak zijn team bij een dichte tafel wint, en sluit alleen als dat genoeg is."]];
+const LV=[["Leg je dubbel","Legt zijn dubbel afhankelijk van zijn rol. Als Leider elke dubbel; als Volger 3-3 of hoger; als Maat 3-3 of hoger zolang de Blokker drie of meer stenen heeft. Nooit met vier of meer stenen van dat getal."],["Eigen kleur","Legt het getal open waarvan hij zelf de meeste stenen overhoudt, in elke rol. Niet naar een getal waarop zijn teamgenoot paste."],["Diversiteit","Heeft hij geen sterke kleur, dan kiest hij de zet waarna hij de meeste verschillende getallen overhoudt."],["Blokkeer de Leider","Komt de Leider na hem, dan legt hij de getallen open waar de Leider het minst op kan."],["Dubbel of blokkeren","Is hij de Blokker en kan hij een dubbel leggen, dan legt hij die, tenzij blokkeren de Leider echt minder ruimte geeft. Heeft de Leider nog één steen, dan gaat blokkeren voor zodra het iets scheelt."],["Ruimte voor de maat","Is zijn maat de Leider, dan legt hij een getal open waarop de volger paste of dat zijn maat zelf legde."],["Geen dos cabes geven","Heeft een tegenstander nog één steen, dan legt hij geen twee gelijke uiteinden."],["Dubbel bewaren","Heeft hij de dubbel en minstens drie andere stenen van dat getal, dan bewaart hij de dubbel zolang iedereen nog vier of meer stenen heeft."],["Dubbel-afgrendeling","Legt geen getal van 4 of hoger open waarvan de dubbel nog niet ligt, als een tegenstander dat getal twee keer liet liggen."],["Pasgetal van de maat","Legt geen getal open waarop zijn maat paste, tenzij de volger er ook op paste."],["Beide uiteinden","Telt bij blokkeren de stenen voor beide uiteinden samen."],["Sluiten op schatting","Legt de tafel dicht als hij schat dat zijn team de speler met de minste stippen heeft."],["Openingssignaal","Opende zijn maat met een andere steen dan 6-6, dan houdt hij die getallen de eerste twee beurten open."],["Maat of blokkeren","Is zijn maat de Leider, dan helpt hij zijn maat. Komt de Leider na hem, dan blokkeert hij."],["Blinde vlek","Legt een getal open waarop de volger paste, als die op het andere uiteinde ook niet kan."],["Voorstopper","Paste zijn voorganger op een open getal en zijn maat niet, dan speelt hij aan de andere kant."],["Dubbel-wissel","Ontbreekt alleen de dubbel nog, houdt hij zelf een steen van dat getal en is iemand bijna uit, dan legt hij dat getal open."],["Dood getal","Komt de Leider na hem, dan legt hij een getal open waarvan alle zeven stenen op tafel of in zijn hand zitten."],["Zwaarste steen","Is een tegenstander bijna uit en kan hij hem niet blokkeren, dan legt hij zijn zwaarste steen."],["Dubbele pas","Legt een getal open waarop beide tegenstanders pasten."],["Exacte sluiting","Rekent met 100 verdelingen uit hoe vaak zijn team bij een dichte tafel wint, en sluit alleen als dat genoeg is."]];
 // Voortgang van vóór de 21 niveaus: het niveaunummer blijft staan
 if((C.v||1)<4){C.v=4;save()}
 
@@ -427,10 +427,18 @@ function lvMove(seat,n){
         ok=Math.min(mine,N(mt)*av)<Math.min(N(nx)*av,N(pv)*av)-2&&N(mt)!==1}
       if(ok)return m}
     if(n>=21&&cl.length)cand=prefer(cand,m=>!cl.includes(m))}
-  const heavy=()=>{let z=cand.filter(m=>I(m).dbl&&I(m).s.a>=5&&cnt(hand,I(m).s.a)<=2);return z.length?pick(bestOf(z,m=>I(m).pips)):null};
+  const role=(((seat-L)&3)*d)&3;   // 0 Leider, 1 Volger, 2 Maat, 3 Blokker
+  // Regel 1 per rol: Leider elke dubbel; Volger 3-3 of hoger, of een lage dubbel (niet 0-0) zonder andere steen van dat getal; Maat 3-3 of hoger zolang de Blokker 3+ stenen heeft
+  const heavy=()=>{let z=cand.filter(m=>I(m).dbl&&cnt(hand,I(m).s.a)<=3);
+    if(role===2)z=N(nx)>=3?z.filter(m=>I(m).s.a>=3):[];
+    else if(role!==0)z=z.filter(m=>I(m).s.a>=3||(I(m).s.a>=1&&cnt(hand,I(m).s.a)===1));
+    return z.length?pick(bestOf(z,m=>I(m).pips)):null};
   // --- De Leider komt na jou: blokkeren (regel 4, 5, 11, 15, 18, 19)
   if(n>=4&&L===nx&&c.length){
-    if(n>=5&&N(nx)>=3){const h=heavy();if(h)return h}
+    if(n>=5){const dz=cand.filter(m=>I(m).dbl&&cnt(hand,I(m).s.a)<=3),oz=cand.filter(m=>!I(m).dbl);
+      if(dz.length){const dm=bestOf(dz,m=>I(m).pips)[0],x=I(dm).s.a;let pm=0;P(nx).forEach(g=>pm|=NMK[g]);
+        const b2=m=>pc(I(m).unk&~pm&(NMK[I(m).es[0]]|NMK[I(m).es[1]])),dd=oz.length?b2(dm)-Math.min(...oz.map(b2)):-9;
+        if(N(nx)===1?dd<=0:(x>=5||(x>=3?dd<=2:dd<=0)))return dm}}
     if(n>=18){const z=cand.filter(m=>I(m).gn.some(g=>I(m).onz(g)===0)&&I(m).other!==null&&I(m).rest.some(t=>has(t,I(m).other)));if(z.length)return finish(bestOf(z,m=>-blk(m,nx)))}
     if(n>=15){const z=cand.filter(m=>I(m).gn.some(g=>P(nx).has(g))&&I(m).other!==null&&(P(nx).has(I(m).other)||I(m).onz(I(m).other)<=1));if(z.length)return finish(bestOf(z,m=>-blk(m,nx)))}
     if(n>=19&&N(nx)<=2&&Math.min(...cand.map(m=>blk(m,nx)))>2)return pick(bestOf(cand,m=>I(m).pips));
@@ -450,11 +458,11 @@ function lvMove(seat,n){
   }
   // --- Regel 8: dubbel bewaren bij een lange kleur
   if(n>=8&&minSt>=4){const keep=cand.filter(m=>I(m).dbl&&cnt(hand,I(m).s.a)>=4);if(keep.length&&keep.length<cand.length)cand=cand.filter(m=>!keep.includes(m))}
+  if(L===seat&&c.length){const h=heavy();if(h)return h}
   // --- Je bent zelf de Leider: sterkste kleur (regel 2)
-  if(n>=2&&L===seat){const mx=Math.max(...[0,1,2,3,4,5,6].map(g=>cnt(hand,g)));
-    if(mx>=3){const vl=new Set();if(c.length){const ai=c.indexOf(G.anchor);c.forEach((t,i)=>{if(t.by===nx&&t!==G.anchor)vl.add(i<ai?t.a:t.b)})}
-      const z=prefer(prefer(cand,m=>!I(m).gn.some(g=>P(mt).has(g))),m=>!I(m).gn.some(g=>vl.has(g)));
-      return finish(bestOf(z,m=>I(m).gn.reduce((a,g)=>a+cnt(I(m).rest,g),0)/I(m).gn.length))}}
+  // --- Regel 2: naar je eigen kleur (het getal waarvan je zelf de meeste stenen overhoudt), niet naar een pasgetal van je teamgenoot
+  const kleur=m=>{const x=I(m);return x.gn.reduce((q,g)=>q+cnt(x.rest,g),0)/x.gn.length};
+  if(n>=2&&L===seat)return finish(bestOf(prefer(cand,m=>!I(m).gn.some(g=>P(mt).has(g)&&!P(nx).has(g))),kleur));
   // --- Regel 17 (dubbel-wissel) of regel 9 (dubbel-afgrendeling)
   const dblOut=g=>!c.some(t=>t.a===g&&t.b===g)&&!hand.some(t=>t.a===g&&t.b===g);
   if(n>=17&&minSt<=2){const z=cand.filter(m=>I(m).gn.some(g=>dblOut(g)&&I(m).onz(g)===1&&cnt(I(m).rest,g)>=1));if(z.length)return finish(z)}
@@ -471,6 +479,7 @@ function lvMove(seat,n){
     const v=[G.anchor.a,G.anchor.b].filter(g=>!P(mt).has(g));if(v.length)cand=prefer(cand,m=>I(m).es.some(g=>v.includes(g)))}
   // --- Regel 19: een tegenstander is bijna uit en je kunt hem niet tegenhouden: zwaarste steen
   if(n>=19&&(L===nx||L===pv)&&N(L)<=2&&Math.min(...cand.map(m=>blk(m,L)))>2)return pick(bestOf(cand,m=>I(m).pips));
+    if(n>=2)cand=bestOf(prefer(cand,m=>!I(m).gn.some(g=>P(mt).has(g)&&!P(nx).has(g))),kleur);
   return finish(cand);
 }
 
@@ -762,7 +771,7 @@ function smooth(ty,bf,n){
 }
 // Tips van spelers: gaan via Web3Forms per mail naar de maker. De sleutel is niet geheim en staat in de installeerbare versie.
 const TIP_KEY='56a39360-a6ea-4d1b-ab06-fc8da3a74b8b';
-const VER='v30';
+const VER='v32';
 function openTip(){info=false;lvi=false;rules=false;tipOpen=true;tipLock=false;render();tipLock=true}
 function closeTip(){tipOpen=false;tipLock=false;G?step():render()}
 function tipHTML(){
@@ -820,9 +829,9 @@ function bestKey(a,b){let bk=0,bv=0;const g=(o,k)=>{const x=o.parts.find(z=>z.k=
 // Per rol: label bij de naam, zin in de tip, uitleg in de spelregels.
 const ROLES=[
  ['Leider','jij bent de Leider','is als eerste uit als iedereen kan aanleggen'],
- ['na Leider','jij komt na de Leider','is aan de beurt direct na de Leider'],
- ['maat Leider','jij bent de maat van de Leider','zit tegenover de Leider'],
- ['vóór Leider','de Leider komt na jou','is aan de beurt direct vóór de Leider']];
+ ['Volger','jij bent de Volger','speelt direct na de Leider'],
+ ['Maat','jij bent de Maat','is de partner van de Leider'],
+ ['Blokker','jij bent de Blokker','speelt direct vóór de Leider']];
 function leaderNow(){const t=G.turn,d=S.ccw?3:1;let L=t,b=1e9;for(let q=0;q<4;q++){const p=(t+q*d)&3,k=(G.hands[p].length-1)*4+q;if(k<b){b=k;L=p}}return L}
 const roleOf=s=>(((s-leaderNow())&3)*(S.ccw?3:1))&3;
 const startRole=s=>(((s-G.lead)&3)*(S.ccw?3:1))&3;   // rol geteld vanaf wie de ronde begon: alleen voor de gewichten van niveau 8
@@ -867,7 +876,7 @@ ${full?`<div class="hl"><b>Maat:</b><span>${maatLine(o)}</span></div><div class=
   };
   return`<div class="abs hint"><div class="hhd"><span><b>💡 Wat denkt wie?</b>${` · ${ROLES[r][1]}`}</span><button onclick="toggleHint()" aria-label="Sluiten">✕</button></div>
 ${top.map(row).join('')}
-${first?`<div class="hwhy"><b>${openNote(ev)}</b></div>`:''}${r===3?`<div class="hwhy"><b>Conventie:</b> komt de Leider na jou, blokkeer hem.</div>`:''}<div class="hwhy">${ev.length>top.length?`En nog ${ev.length-top.length} andere ${ev.length-top.length===1?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
+${first?`<div class="hwhy"><b>${openNote(ev)}</b></div>`:''}${r===3?`<div class="hwhy"><b>Conventie:</b> ben je de Blokker, blokkeer de Leider.</div>`:''}<div class="hwhy">${ev.length>top.length?`En nog ${ev.length-top.length} andere ${ev.length-top.length===1?'zet':'zetten'}. `:''}${why} (advies van de computer)</div></div>`;
 }
 function toggleLvInfo(){lvi=!lvi;render()}
 function lvInfoHTML(){
@@ -897,8 +906,8 @@ ${S.dos?'<li><b>Dos cabes:</b> kon je met je laatste steen aan beide kanten aanl
 <li><b>Wedstrijd:</b> je speelt best of 5, 9 of 19. Wie als eerste meer dan de helft van de rondes heeft, wint de wedstrijd.</li></ul>
 <h3>De Leider en de vier rollen</h3>
 <p>De Leider is op elk moment de speler die als eerste uit is als iedereen vanaf dan kan aanleggen: wie de minste stenen heeft, en bij gelijk wie het eerst aan de beurt komt. De Leider kan tijdens een ronde wisselen. Bij elke naam zie je de rol van dat moment.</p>
-<ul>${['Leider','Na de Leider','Maat van de Leider','Vóór de Leider'].map((n,i)=>`<li><b>${n}:</b> ${ROLES[i][2]}.</li>`).join('')}</ul>
-<p><b>Conventie:</b> komt de Leider na jou, blokkeer hem. Laat de getallen liggen waar hij het minst op kan, beide uiteinden samen: getallen waarop hij paste, of waarvan de meeste stenen al liggen of bij jou zitten.</p>
+<ul>${['Leider','Volger','Maat','Blokker'].map((n,i)=>`<li><b>${n}:</b> ${ROLES[i][2]}.</li>`).join('')}</ul>
+<p><b>Conventie:</b> ben je de Blokker, blokkeer de Leider. Laat de getallen liggen waar hij het minst op kan, beide uiteinden samen: getallen waarop hij paste, of waarvan de meeste stenen al liggen of bij jou zitten.</p>
 <h3>Strategie</h3>
 <ul><li><b>Uitkomen:</b> begin met de dubbel 6, behalve als je geen andere zes hebt en een andere dubbel waarvan je minstens twee stenen hebt. Dan begin je met die dubbel.</li>
 ${S.dos?'<li><b>Dos cabes:</b> bijna elke ronde kan eindigen met dubbele punten. Met twee stenen over leg je de steen waarna je laatste steen aan beide kanten past. De computer vanaf niveau 8 weegt dit mee, maar niet als een gewone winst de wedstrijd al beslist.</li>':''}
@@ -909,7 +918,7 @@ ${S.dos?'<li><b>Dos cabes:</b> bijna elke ronde kan eindigen met dubbele punten.
 function infoHTML(){
   if(!info)return'';
   return`<div class="abs" style="inset:0;background:#0008;z-index:5" onclick="toggleInfo()"></div><div class="abs card infop"><h2>Niveaus en promotie</h2>
-<p>Je begint op niveau 1, waar de computer alleen zijn zware dubbels kwijt wil. Je speelt elke wedstrijd op jouw niveau. Win je, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau omlaag (op niveau 1 en op niveau ${LV.length} blijf je staan als je daar respectievelijk verliest of wint). West, Oost en je maat Noord spelen alle drie op jouw niveau. Elk niveau voegt één regel toe aan de regels van de niveaus eronder. Welke regel geldt, hangt af van wie de Leider is: komt hij na de computer, dan blokkeert die; is het zijn maat, dan maakt hij ruimte; is hij het zelf, dan speelt hij zijn sterkste kleur. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste, nooit in andermans hand.</p>
+<p>Je begint op niveau 1, waar de computer alleen op zijn dubbels let. Je speelt elke wedstrijd op jouw niveau. Win je, dan ga je een niveau omhoog. Verlies je, dan ga je een niveau omlaag (op niveau 1 en op niveau ${LV.length} blijf je staan als je daar respectievelijk verliest of wint). West, Oost en je maat Noord spelen alle drie op jouw niveau. Elk niveau voegt één regel toe aan de regels van de niveaus eronder. Welke regel geldt, hangt af van wie de Leider is: komt hij na de computer, dan blokkeert die; is het zijn maat, dan maakt hij ruimte; is hij het zelf, dan speelt hij zijn sterkste kleur. Ze kijken alleen naar hun eigen stenen, de tafel en wie op welk getal paste, nooit in andermans hand.</p>
 <ol>${LV.map(([n,d],i)=>`<li${i+1===lvl()?' class="now"':''}><b>${n}:</b> ${d}</li>`).join('')}</ol>
 <div class="tipbtn"><button class="go" onclick="toggleInfo()">Sluiten</button><button class="lnk" onclick="toggleInfo();openTip()">💡 Tip insturen</button></div></div>`;
 }
@@ -970,7 +979,7 @@ function render(){
   }).join('');
   const bk=s=>G.over?G.hands[s].map(t=>dom(t.a,t.b,false,'r')).join(''):'<i></i>'.repeat(G.hands[s].length);
   const rl=s=>`<small class="rl">· ${ROLES[roleOf(s)][0]}</small>`;
-  const seat=s=>`<div class="abs seat ${'.wne'[s]}${G.turn===s&&!G.over?' turn':''}"><div class="bk"><span class="nm">${G.over&&sv===s?'👑 ':''}${s===2?'Noord (maat)':SHORT[s]}${rl(s)}</span>${G.over?`<span class="pts">${tot(s)} stippen</span>`:ps.has(s)?`<div class="pas${lp===s?' pop':''}" role="img" aria-label="gepast">P</div>`:''}${bk(s)}</div></div>`;
+  const seat=s=>`<div class="abs seat ${'.wne'[s]}${G.turn===s&&!G.over?' turn':''}"><div class="bk"><span class="nm">${G.over&&sv===s?'👑 ':''}${s===2?'Noord (partner)':SHORT[s]}${rl(s)}</span>${G.over?`<span class="pts">${tot(s)} stippen</span>`:ps.has(s)?`<div class="pas${lp===s?' pop':''}" role="img" aria-label="gepast">P</div>`:''}${bk(s)}</div></div>`;
   const ps=new Set(G.hist.slice(-3).filter(h=>!h.o).map(h=>h.seat));
   const status=G.over?'':G.sel!==null?'Kies waar de steen moet komen':G.note?G.note:G.turn?`${SHORT[G.turn]} denkt na…`:mv.length?(c.length?'Jij bent aan de beurt':'Leg een steen naar keuze'):'Je kunt niet leggen: tik op tafel';
   const t=G.over&&G.over.team;
